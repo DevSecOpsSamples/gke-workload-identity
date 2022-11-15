@@ -10,8 +10,8 @@ repositories {
 sonarqube {
     properties {
         property "sonar.projectName", "gke-python"
-        property "sonar.projectKey", "DevOpsSampleOrg_gke-python"
-        property "sonar.organization", "devopssampleorg"
+        property "sonar.projectKey", "DevSecOpsSamples_gke-python"
+        property "sonar.organization", "devsecopssampls"
         // property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sourceEncoding", "UTF-8"
@@ -22,7 +22,7 @@ sonarqube {
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "typescript:S1848"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.ts"
-        property "sonar.links.ci", "https://github.com/DevOpsSampleOrg/gke-python"
+        property "sonar.links.ci", "https://github.com/DevSecOpsSamples/gke-python"
         property "sonar.log.level", "DEBUG"
     }
 }
