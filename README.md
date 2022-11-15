@@ -284,6 +284,9 @@ echo "PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
 gcloud pubsub topics add-iam-policy-binding echo  \
       --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
       --role=roles/pubsub.publisher
+```
+
+```bash
 gcloud pubsub topics get-iam-policy echo --format yaml
 ```
 
