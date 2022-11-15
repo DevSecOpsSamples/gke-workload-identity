@@ -11,6 +11,9 @@ build
 *.tar.gz
 *.rar
 
+# MAC
+**/.DS_Store
+
 # internal
 *internal*
 
