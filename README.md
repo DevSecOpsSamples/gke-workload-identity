@@ -116,7 +116,9 @@ gcloud iam service-accounts list | grep bucket-api
 3.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts
 
 ```bash
-gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts add-iam-policy-binding \
+       --role roles/iam.workloadIdentityUser 
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ```yaml
@@ -240,7 +242,9 @@ gcloud iam service-accounts list | grep pubsub-api
 5.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts
 
 ```bash
-gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts add-iam-policy-binding  \
+       --role roles/iam.workloadIdentityUser  \
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ```yaml
@@ -273,7 +277,9 @@ gcloud pubsub subscriptions create echo-read --topic=echo
 
 ```bash
 echo "PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
-gcloud pubsub topics add-iam-policy-binding echo --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/pubsub.publisher
+gcloud pubsub topics add-iam-policy-binding echo  \
+      --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com \
+      --role=roles/pubsub.publisher
 gcloud pubsub topics get-iam-policy echo --format yaml
 ```
 
@@ -289,7 +295,9 @@ version: 1
 6.3. Grant permission to IAM service account for subscription.
 
 ```bash
-gcloud pubsub subscriptions add-iam-policy-binding echo-read --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/pubsub.subscriber
+gcloud pubsub subscriptions add-iam-policy-binding echo-read  \
+       --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com  \
+       --role=roles/pubsub.subscriber
 gcloud pubsub subscriptions get-iam-policy projects/${PROJECT_ID}/subscriptions/echo-read --format yaml
 ```
 
