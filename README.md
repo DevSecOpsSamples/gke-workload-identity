@@ -1,4 +1,4 @@
-# Python sample project for Workload Identity on GKE
+# GKE Workload Identity sample project
 
 ## Overview
 
