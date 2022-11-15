@@ -149,7 +149,8 @@ gcloud storage buckets create gs://${GCS_BUCKET_NAME}
 Grant objectAdmin role to IAM service account to access a GCS bucket.
 
 ```bash
-gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin gs://${GCS_BUCKET_NAME}/
+gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin
+       gs://${GCS_BUCKET_NAME}/
 ```
 
 Refer to the https://cloud.google.com/storage/docs/access-control/iam-roles page for predefined roles.
