@@ -9,9 +9,9 @@ repositories {
 
 sonarqube {
     properties {
-        property "sonar.projectName", "eks-gpu-autoscaling"
-        property "sonar.projectKey", "ContainerOnAWS_eks-gpu-autoscaling"
-        property "sonar.organization", "containeronaws"
+        property "sonar.projectName", "gke-python"
+        property "sonar.projectKey", "ContainerOnAWS_gke-python"
+        property "sonar.organization", "devopssampleorg"
         // property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sourceEncoding", "UTF-8"
@@ -22,7 +22,7 @@ sonarqube {
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "typescript:S1848"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.ts"
-        property "sonar.links.ci", "https://github.com/ContainerOnAWS/eks-gpu-autoscaling"
+        property "sonar.links.ci", "https://github.com/ContainerOnAWS/gke-python"
         property "sonar.log.level", "DEBUG"
     }
 }
