@@ -5,10 +5,9 @@
 The Workload Identity is the recommended way for your workloads running on Google Kubernetes Engine (GKE) to access Google Cloud services in a secure and manageable way. 
 In this sample project, we will learn GKE security with the IAM service account and Workload Identity.
 
-
 > Applications running on GKE might need access to Google Cloud APIs such as Compute Engine API, BigQuery Storage API, or Machine Learning APIs.
 > Workload Identity allows a Kubernetes service account in your GKE cluster to act as an IAM service account. Pods that use the configured Kubernetes service account automatically authenticate as the IAM service account when accessing Google Cloud APIs. Using Workload Identity allows you to assign distinct, fine-grained identities and authorization for each application in your cluster.
-> 
+>
 > https://cloud.google.com/kubernetes-engine/docs/concepts/workload-identity
 
 
@@ -46,11 +45,9 @@ Learn the features below:
 
 ### Installation
 
-* [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install)
-
-* [Install gsutil](https://cloud.google.com/storage/docs/gsutil_install#install)
-
-* [Install kubectl and configure cluster access](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl)
+- [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install)
+- [Install gsutil](https://cloud.google.com/storage/docs/gsutil_install#install)
+- [Install kubectl and configure cluster access](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl)
 
 ### Set environment variables
 
@@ -121,6 +118,7 @@ gcloud iam service-accounts list | grep bucket-api
 ```bash
 gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
+
 ```yaml
 Updated IAM policy for serviceAccount [bucket-api@sample-project.iam.gserviceaccount.com].
 bindings:
@@ -140,19 +138,22 @@ kubectl annotate serviceaccount --namespace bucket-api bucket-api-ksa iam.gke.io
 3.4. GCS bucket creation and grant a permission.
 
 Create a GCS bucket
+
 ```bash
 gcloud storage buckets create gs://${GCS_BUCKET_NAME}
 ```
 
 Grant objectAdmin role to IAM service account to access a GCS bucket.
+
 ```bash
 gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin gs://${GCS_BUCKET_NAME}/
 ```
+
 Refer to the https://cloud.google.com/storage/docs/access-control/iam-roles page for predefined roles.
 
 Use `serviceAccountName` for Pods:
 
-[bucket-api-template.yaml](bucket-api/bucket-api-template.yaml).
+[bucket-api-template.yaml](bucket-api/bucket-api-template.yaml):
 
 ```yaml
 apiVersion: apps/v1
@@ -177,7 +178,6 @@ spec:
         - name: bucket-api
 ```
 
-
 ## Step4: Deploy bucket-api
 
 4.1. Build and push to GCR:
@@ -199,21 +199,31 @@ kubectl apply -f bucket-api.yaml
 ```
 
 Confirm that pod configuration and logs after deployment:
+
 ```bash
 kubectl describe pods -n bucket-api
 kubectl logs -l app=bucket-api -n bucket-api
 ```
 
 4.3 Invoke `/bucket` API using a load balancer IP:
+
 ```bash
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }')
 echo ${LB_IP_ADDRESS}
 
 curl http://${LB_IP_ADDRESS}/
-# {"host":"34.149.214.247","message":"bucket-api","method":"GET","url":"http://34.149.214.247/"}
+```
 
+```json
+{"host":"34.149.214.247","message":"bucket-api","method":"GET","url":"http://34.149.214.247/"}
+```
+
+```bash
 curl http://${LB_IP_ADDRESS}/bucket
-# {"blob_name":"put-test.txt","bucket_name":"bucket-api","response":"read/write test, bucket: bucket-api"}
+```
+
+```json
+{"blob_name":"put-test.txt","bucket_name":"bucket-api","response":"read/write test, bucket: bucket-api"}
 ```
 
 ## Step5: IAM service account for pubsub-api
@@ -232,6 +242,7 @@ gcloud iam service-accounts list | grep pubsub-api
 ```bash
 gcloud iam service-accounts add-iam-policy-binding --role roles/iam.workloadIdentityUser --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
+
 ```yaml
 Updated IAM policy for serviceAccount [pubsub-api@sample-project.iam.gserviceaccount.com].
 bindings:
@@ -281,6 +292,7 @@ version: 1
 gcloud pubsub subscriptions add-iam-policy-binding echo-read --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/pubsub.subscriber
 gcloud pubsub subscriptions get-iam-policy projects/${PROJECT_ID}/subscriptions/echo-read --format yaml
 ```
+
 ```yaml
 bindings:
 - members:
@@ -312,25 +324,35 @@ kubectl apply -f pubsub-api.yaml -n pubsub-api
 ```
 
 Confirm that pod configuration and logs after deployment:
+
 ```bash
 kubectl describe pods -n pubsub-api
 kubectl logs -l app=pubsub-api -n pubsub-api
 ```
 
 Invoke `/pub`, `/sub`, `/bucket` API using a load balancer IP:
+
 ```bash
  LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }')
 echo ${LB_IP_ADDRESS}
+```
 
+```bash
 curl http://${LB_IP_ADDRESS}/pub
+```
 
+```json
 {
   "result": "6237829865389825",
   "topic_name": "projects/sample-project/topics/echo"
 }
+```
 
+```bash
 curl http://${LB_IP_ADDRESS}/sub
+```
 
+```json
 {
   "acknowledged": 7,
   "subscription_path": "projects/sample-project/subscriptions/echo-read",
@@ -338,18 +360,20 @@ curl http://${LB_IP_ADDRESS}/sub
 }
 ```
 
+```bash
 curl http://${LB_IP_ADDRESS}/bucket
+```
 
 `/bucket` API does not work because permission granted to pub/pub service only.
 
-# Resources
+## Resources
 
 Deployment
- - [bucket-api-template.yaml](bucket-api/bucket-api-template.yaml)
- - [pubsub-api-template.yaml](pubsub-api/pubsub-api-template.yaml)
+  
+- [bucket-api-template.yaml](bucket-api/bucket-api-template.yaml)
+- [pubsub-api-template.yaml](pubsub-api/pubsub-api-template.yaml)
 
-
-# Cleanup
+## Cleanup
 
 ```bash
 kubectl delete -f bucket-api/bucket-api.yaml
@@ -373,7 +397,7 @@ gcloud iam service-accounts delete --iam-account "${PUBSUB_SERVICE_ACCOUNT}@${PR
 docker system prune -a
 ```
 
-# References
+## References
 
 - [Use Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
 - [Cloud SDK > Documentation > Reference > gcloud iam service-accounts add-iam-policy-binding](https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/add-iam-policy-binding)
