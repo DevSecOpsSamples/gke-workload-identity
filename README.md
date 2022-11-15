@@ -262,7 +262,8 @@ version: 1
 5.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace pubsub-api pubsub-api-ksa iam.gke.io/gcp-service-account=${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+kubectl annotate serviceaccount --namespace pubsub-api pubsub-api-ksa \
+        iam.gke.io/gcp-service-account=${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ## Step6: Create a Topic/Subscription and grant a permission
@@ -270,7 +271,8 @@ kubectl annotate serviceaccount --namespace pubsub-api pubsub-api-ksa iam.gke.io
 6.1. Create a Topic and Subscription.
 
 ```bash
-gcloud services enable cloudresourcemanager.googleapis.com pubsub.googleapis.com container.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com pubsub.googleapis.com \
+       container.googleapis.com
 gcloud pubsub topics create echo
 gcloud pubsub subscriptions create echo-read --topic=echo
 ```
