@@ -25,7 +25,7 @@ Learn the features below:
 - Step2: Create Kubernetes namespace and service account
 - Step3: IAM service account for bucket-api
     - 3.1. Creating an IAM Service Account
-    - 3.2. IAM policy binding between the two service accounts
+    - 3.2. IAM policy binding between IAM service account and Kubernetes service accounttwo service accounts
     - 3.3. Annotate the Kubernetes service account
 - Step4: GCS bucket creation and grant a permission
 - Step5: Deploy bucket-api
