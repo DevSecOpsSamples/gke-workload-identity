@@ -117,7 +117,7 @@ gcloud iam service-accounts list | grep bucket-api
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
-       --role roles/iam.workloadIdentityUser 
+       --role roles/iam.workloadIdentityUser \
        --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -134,7 +134,8 @@ version: 1
 3.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace bucket-api bucket-api-ksa iam.gke.io/gcp-service-account=${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+kubectl annotate serviceaccount --namespace bucket-api bucket-api-ksa \
+        iam.gke.io/gcp-service-account=${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 3.4. GCS bucket creation and grant a permission.
@@ -295,13 +296,14 @@ version: 1
 6.3. Grant permission to IAM service account for subscription.
 
 ```bash
-gcloud pubsub subscriptions add-iam-policy-binding echo-read  \
+gcloud pubsub subscriptions add-iam-policy-binding echo-read \
        --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com  \
        --role=roles/pubsub.subscriber
 ```
 
 ```bash
-gcloud pubsub subscriptions get-iam-policy projects/${PROJECT_ID}/subscriptions/echo-read --format yaml
+gcloud pubsub subscriptions get-iam-policy projects/${PROJECT_ID}/subscriptions/echo-read \
+       --format yaml
 ```
 
 ```yaml
