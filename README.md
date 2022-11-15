@@ -349,8 +349,7 @@ kubectl describe pods -n pubsub-api
 kubectl logs -l app=pubsub-api -n pubsub-api
 ```
 
-Invoke `/pub`, `/sub`, `/bucket` API using a load balancer IP:
-
+Confirm that response of `/pub`, `/sub`, and `/bucket` APIs.
 ```bash
  LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }')
 echo ${LB_IP_ADDRESS}
