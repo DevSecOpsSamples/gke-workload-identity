@@ -298,6 +298,9 @@ version: 1
 gcloud pubsub subscriptions add-iam-policy-binding echo-read  \
        --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com  \
        --role=roles/pubsub.subscriber
+```
+
+```bash
 gcloud pubsub subscriptions get-iam-policy projects/${PROJECT_ID}/subscriptions/echo-read --format yaml
 ```
 
