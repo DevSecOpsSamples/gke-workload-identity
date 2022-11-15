@@ -398,12 +398,11 @@ Deployment
 kubectl delete -f bucket-api/bucket-api.yaml
 kubectl delete -f pubsub-api/pubsub-api.yaml
 
-delete secret bucket-api -n bucket-api
-delete secret pubsub-api -n pubsub-api
-
 kubectl delete namespace bucket-api
 kubectl delete namespace pubsub-api
+```
 
+```bash
 gcloud storage buckets delete gs://${GCS_BUCKET_NAME}
 
 gcloud pubsub subscriptions remove-iam-policy-binding echo-read --member=serviceAccount:${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/pubsub.subscriber
