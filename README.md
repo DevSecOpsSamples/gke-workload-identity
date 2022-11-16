@@ -27,18 +27,18 @@ Learn the features below:
 - Step2: Create Kubernetes namespace and service account
 - Step3: IAM service account for bucket-api
     - 3.1. Creating an IAM Service Account
-    - 3.2. IAM policy binding between IAM service account and Kubernetes service accounttwo service accounts
+    - 3.2. IAM policy binding between IAM service account and Kubernetes service account
     - 3.3. Annotate the Kubernetes service account
 - Step4: GCS bucket creation and grant a permission
 - Step5: Deploy bucket-api
 - Step6: IAM service account for pubsub-api
     - 6.1. Creating an IAM Service Account
-    - 6.2. IAM policy binding between the two service accounts
+    - 6.2. IAM policy binding between IAM service account and Kubernetes service account
     - 6.3. Annotate the Kubernetes service account
 - Step7: Create a Topic/Subscription and grant a permission
     - 7.1. Create a Topic and Subscription.
-    - 7.2. Grant permission to IAM service account to publish to Topic.
-    - 7.3. Grant permission to IAM service account for subscription.
+    - 7.2. Grant permission to IAM service account to publish to Topic
+    - 7.3. Grant permission to IAM service account for subscription
 - Step8: Deploy pubsub-api
 
 ---
@@ -115,7 +115,7 @@ gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name="bucket-api
 gcloud iam service-accounts list | grep bucket-api
 ```
 
-3.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts
+3.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts.
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
@@ -244,7 +244,7 @@ gcloud iam service-accounts create ${PUBSUB_SERVICE_ACCOUNT} --display-name="pub
 gcloud iam service-accounts list | grep pubsub-api
 ```
 
-5.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts
+5.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts.
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
