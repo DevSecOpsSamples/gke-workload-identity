@@ -28,7 +28,7 @@ def ping():
 
 @app.route("/bucket")
 def bucket():
-    return write_read('z-test-onboarding', 'put-test.txt')
+    return write_read('bucket-api', 'put-test.txt')
 
 def write_read(bucket_name, blob_name):
     response = ""
