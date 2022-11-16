@@ -1,3 +1,30 @@
+build
+.gradle
+.vscode
+
+*.log
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# MAC
+**/.DS_Store
+
+# internal
+*internal*
+
+# GKE
+service-account.json
+
+# k8s
+bucket-api.yaml
+pubsub-api.yaml
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
