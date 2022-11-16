@@ -9,13 +9,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def ping_root():
-    return returnRequests()
+    return ping()
 
 @app.route("/<string:path1>")
 def ping_path1(path1):
-    return returnRequests()
+    return ping()
 
-def returnRequests():
+def ping():
     return {
         "host": request.host,
         "url": request.url,

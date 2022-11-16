@@ -245,9 +245,10 @@ gcloud iam service-accounts list | grep pubsub-api
 5.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts
 
 ```bash
-gcloud iam service-accounts add-iam-policy-binding  \
-       --role roles/iam.workloadIdentityUser  \
-       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts add-iam-policy-binding \
+       --role roles/iam.workloadIdentityUser \
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" \
+       ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ```yaml
@@ -351,8 +352,9 @@ kubectl logs -l app=pubsub-api -n pubsub-api
 ```
 
 Confirm that response of `/pub`, `/sub`, and `/bucket` APIs.
+
 ```bash
- LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }')
+LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }')
 echo ${LB_IP_ADDRESS}
 ```
 
@@ -385,9 +387,23 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 `/bucket` API does not work because permission granted to pub/pub service only.
 
-## Resources
+## Structure
 
-Deployment
+```bash
+├── build.gradle
+├── bucket-api
+│   ├── Dockerfile
+│   ├── app.py
+│   ├── bucket-api-template.yaml
+│   ├── deploy.sh
+│   └── requirements.txt
+└── pubsub-api
+    ├── Dockerfile
+    ├── app.py
+    ├── deploy.sh
+    ├── pubsub-api-template.yaml
+    └── requirements.txt
+```
   
 - [bucket-api-template.yaml](bucket-api/bucket-api-template.yaml)
 - [pubsub-api-template.yaml](pubsub-api/pubsub-api-template.yaml)
