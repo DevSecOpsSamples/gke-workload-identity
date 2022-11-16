@@ -118,7 +118,8 @@ gcloud iam service-accounts list | grep bucket-api
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
        --role roles/iam.workloadIdentityUser \
-       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" \
+       ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
 ```yaml
