@@ -185,6 +185,8 @@ spec:
         - name: bucket-api
 ```
 
+**NOTE:** If you want to test for debugging on your desktop with the IAM key, refer to the [README-test.md](README-test.md).
+
 ## Step4: Deploy bucket-api
 
 4.1. Build and push to GCR:
