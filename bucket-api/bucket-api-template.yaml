@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bucket-api
+  namespace: bucket-api
+  annotations:
+    app: 'bucket-api'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bucket-api
+  template:
+    metadata:
+      labels:
+        app: bucket-api
+    spec:
+      serviceAccountName: bucket-api-ksa
+      containers:
+        - name: bucket-api
+          image: gcr.io/<project-id>/bucket-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "0.25"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bucket-api
+  namespace: bucket-api
+  annotations:
+    app: 'bucket-api'
+    cloud.google.com/backend-config: '{"default": "bucket-api-backend-config"}'
+spec:
+  selector:
+    app: bucket-api
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: 'bucket-api-hpa'
+  namespace: bucket-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: 'bucket-api'
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "bucket-api-ingress"
+  namespace: bucket-api
+  annotations:
+    app: 'bucket-api'
+    kubernetes.io/ingress.class: gce
+spec:
+  rules:
+  - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: bucket-api
+                port:
+                  number: 8000
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: bucket-api-backend-config
+  namespace: bucket-api
+spec:
+  healthCheck:
+    checkIntervalSec: 10
+    timeoutSec: 10
+    healthyThreshold: 1
+    unhealthyThreshold: 3
+    port: 8000
+    type: HTTP
+    requestPath: /ping
