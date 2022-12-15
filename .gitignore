@@ -16,6 +16,7 @@ build
 
 # internal
 *internal*
+terraform.tfvars
 
 # GKE
 service-account.json
