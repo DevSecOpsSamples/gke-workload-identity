@@ -16,7 +16,7 @@ build
 
 # internal
 *internal*
-terraform.tfvars
+terraform.tfvars*
 
 # GKE
 service-account.json
@@ -25,6 +25,20 @@ service-account.json
 bucket-api.yaml
 pubsub-api.yaml
 
+# terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
