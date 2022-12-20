@@ -23,4 +23,3 @@ sonarqube {
         property "sonar.links.ci", "https://github.com/DevSecOpsSamples/gke-workload-identity/actions"
     }
 }
-

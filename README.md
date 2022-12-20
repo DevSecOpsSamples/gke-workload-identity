@@ -1,4 +1,4 @@
-# GKE Workload Identity sample project
+# GKE Workload Identity
 
 [![Build](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
@@ -59,19 +59,19 @@ If you use the Terraform, you can create all resources Terraform at a time. Plea
 
 ```bash
 # replace with your project
-PROJECT_ID      = "sample-project" 
-COMPUTE_ZONE    = "us-central1"
-SERVICE_ACCOUNT = "bucket-api"
-PUBSUB_SERVICE_ACCOUNT = "pubsub-api"
-GCS_BUCKET_NAME = "bucket-api"
+PROJECT_ID="sample-project"
+COMPUTE_ZONE="us-central1"
+SERVICE_ACCOUNT="bucket-api-sa"
+PUBSUB_SERVICE_ACCOUNT="pubsub-api-sa"
+GCS_BUCKET_NAME="bucket-api"
 ```
 
 |   | Environment Variable           | Value             | Description                     |
 |---|--------------------------------|-------------------|---------------------------------|
 | 1 | PROJECT_ID                     | sample-project    | This variable will also be used for pub/sub deployment.          |
 | 2 | COMPUTE_ZONE                   | us-central1       | Run `gcloud compute zones list` to get all zones.                |
-| 3 | SERVICE_ACCOUNT                | bucket-api        | IAM service account for bucket-api to access to GCS bucket only. |
-| 4 | PUBSUB_SERVICE_ACCOUNT         | pubsub-api        | IAM service account for pubsub-api to access to pub/sub only.    |
+| 3 | SERVICE_ACCOUNT                | bucket-api-sa        | IAM service account for bucket-api to access to GCS bucket only. |
+| 4 | PUBSUB_SERVICE_ACCOUNT         | pubsub-api-sa        | IAM service account for pubsub-api to access to pub/sub only.    |
 | 5 | GCS_BUCKET_NAME                | bucket-api        |           |
 
 ### Set GCP project
@@ -117,7 +117,7 @@ kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
 
 gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name="bucket-api-ns service account"
-gcloud iam service-accounts list | grep bucket-api-ns
+gcloud iam service-accounts list | grep bucket-api-sa
 ```
 
 3.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts.
@@ -273,7 +273,7 @@ version: 1
 5.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace pubsub-api-ns pubsub-api-ksa \
+kubectl annotate serviceaccount --namespace pubsub-api-ns pubsub-api-sa \
         iam.gke.io/gcp-service-account=${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -358,6 +358,8 @@ Confirm that pod configuration and logs after deployment:
 ```bash
 kubectl describe pods -n pubsub-api-ns
 kubectl logs -l app=pubsub-api -n pubsub-api-ns
+#kubectl get service -n pubsub-api-ns -o yaml
+kubectl describe service -n pubsub-api-ns
 ```
 
 Confirm that response of `/pub`, `/sub`, and `/bucket` APIs.
@@ -434,8 +436,8 @@ gcloud pubsub subscriptions remove-iam-policy-binding echo-read --member=service
 gcloud pubsub subscriptions delete echo-read
 gcloud pubsub topics delete echo
 
-gcloud iam service-accounts delete --iam-account "${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" 
-gcloud iam service-accounts delete --iam-account "${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" 
+gcloud iam service-accounts delete "${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" 
+gcloud iam service-accounts delete "${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com" 
 
 docker system prune -a
 ```

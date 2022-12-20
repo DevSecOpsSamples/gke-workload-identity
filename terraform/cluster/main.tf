@@ -44,9 +44,7 @@ module "gke_auth" {
   location             = google_container_cluster.primary.location
   use_private_endpoint = false
 
-  depends_on = [
-    google_container_cluster.primary
-  ]
+  depends_on = [google_container_cluster.primary]
 }
 
 provider "kubernetes" {
