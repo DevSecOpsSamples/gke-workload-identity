@@ -124,9 +124,7 @@ kubectl get all -n pubsub-api-ns
 ### Enable Workload Identy
 
 ```bash
-gcloud container clusters update sample-cluster-dev --enable-autoscaling
-
-gcloud compute instances describe gke-sample-cluster-d-sample-cluster-d-5aa5a05c-0gnr  --zone=us-central1-a --format="flattened(serviceAccounts[].scopes)"
+#gcloud container clusters update sample-cluster-dev --enable-autoscaling
 ```
 
 ### Manifest Deployment
