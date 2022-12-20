@@ -116,8 +116,8 @@ kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
 
-gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name="bucket-api service account"
-gcloud iam service-accounts list | grep bucket-api
+gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name="bucket-api-ns service account"
+gcloud iam service-accounts list | grep bucket-api-ns
 ```
 
 3.2. Allow the Kubernetes service account to impersonate the IAM service account by adding an IAM policy binding between the two service accounts.
@@ -125,7 +125,7 @@ gcloud iam service-accounts list | grep bucket-api
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
        --role roles/iam.workloadIdentityUser \
-       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api/bucket-api-ksa]" \
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[bucket-api-ns/bucket-api-ksa]" \
        ${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -133,7 +133,7 @@ gcloud iam service-accounts add-iam-policy-binding \
 Updated IAM policy for serviceAccount [bucket-api@sample-project.iam.gserviceaccount.com].
 bindings:
 - members:
-  - serviceAccount:sample-project.svc.id.goog[bucket-api/bucket-api-ksa]
+  - serviceAccount:sample-project.svc.id.goog[bucket-api-ns/bucket-api-ksa]
   role: roles/iam.workloadIdentityUser
 etag: BwXtbNaPnNg=
 version: 1
@@ -172,7 +172,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bucket-api
-  namespace: bucket-api
+  namespace: bucket-api-ns
   annotations:
     app: 'bucket-api'
 spec:
@@ -247,7 +247,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
 
-gcloud iam service-accounts create ${PUBSUB_SERVICE_ACCOUNT} --display-name="pubsub-api service account"
+gcloud iam service-accounts create ${PUBSUB_SERVICE_ACCOUNT} --display-name="pubsub-api-ns service account"
 gcloud iam service-accounts list | grep pubsub-api
 ```
 
@@ -256,7 +256,7 @@ gcloud iam service-accounts list | grep pubsub-api
 ```bash
 gcloud iam service-accounts add-iam-policy-binding \
        --role roles/iam.workloadIdentityUser \
-       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api/pubsub-api-ksa]" \
+       --member "serviceAccount:${PROJECT_ID}.svc.id.goog[pubsub-api-ns/pubsub-api-ksa]" \
        ${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -264,7 +264,7 @@ gcloud iam service-accounts add-iam-policy-binding \
 Updated IAM policy for serviceAccount [pubsub-api@sample-project.iam.gserviceaccount.com].
 bindings:
 - members:
-  - serviceAccount:sample-project.svc.id.goog[pubsub-api/pubsub-api-ksa]
+  - serviceAccount:sample-project.svc.id.goog[pubsub-api-ns/pubsub-api-ksa]
   role: roles/iam.workloadIdentityUser
 etag: BwXtbNaPnNg=
 version: 1
