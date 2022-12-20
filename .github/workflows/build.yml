@@ -7,11 +7,24 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  build:
-    name: Build
+  build-docker-bucket-api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: cd bucket-api && docker build . -t bucket-api:$(date +%s)
+
+  build-docker-pubsub-api:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: cd pubsub-api && docker build . -t pubsub-api:$(date +%s)
+
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 11

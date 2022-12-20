@@ -1,5 +1,6 @@
 # GKE Workload Identity sample project
 
+[![Build](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
 
 ## Overview
@@ -20,6 +21,7 @@ Learn the features below:
 - IAM service account and role/permission
 - Workload Identity
 - Pod specification for GKE service account and GCP load balancer
+- Create resources with Terraform
 
 ## Table of Contents
 
@@ -41,6 +43,8 @@ Learn the features below:
     - 7.3. Grant permission to IAM service account for subscription
 - Step8: Deploy pubsub-api
 
+If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [terraform/README.md](terraform/README.md) page.
+
 ---
 
 ## Prerequisites
@@ -54,11 +58,12 @@ Learn the features below:
 ### Set environment variables
 
 ```bash
-PROJECT_ID="sample-project" # replace with your project
-COMPUTE_ZONE="us-central1"
-SERVICE_ACCOUNT="bucket-api"
-PUBSUB_SERVICE_ACCOUNT="pubsub-api"
-GCS_BUCKET_NAME="bucket-api"
+# replace with your project
+PROJECT_ID      = "sample-project" 
+COMPUTE_ZONE    = "us-central1"
+SERVICE_ACCOUNT = "bucket-api"
+PUBSUB_SERVICE_ACCOUNT = "pubsub-api"
+GCS_BUCKET_NAME = "bucket-api"
 ```
 
 |   | Environment Variable           | Value             | Description                     |
@@ -83,25 +88,25 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 Create an Autopilot GKE cluster. It may take around 9 minutes.
 
 ```bash
-gcloud container clusters create-auto hello-cluster --region=${COMPUTE_ZONE}
-gcloud container clusters get-credentials hello-cluster
+gcloud container clusters create-auto sample-cluster-dev --region=${COMPUTE_ZONE}
+gcloud container clusters get-credentials sample-cluster-dev
 ```
 
 ## Step2: Create Kubernetes namespace and service account
 
 | API        | Object            | Name            | Description                 |
 |------------|-------------------|-----------------|-----------------------------|
-| bucket-api | namespace         | bucket-api      |                             |
+| bucket-api | namespace         | bucket-api-ns   |                             |
 | bucket-api | service account   | bucket-api-ksa  | Kubernetes service account  |
-| pubsub-api | namespace         | pubsub-api      |                             |
-| pubsub-api | service account   | pubsub-api-ksa  | Kubernetes service account  | 
+| pubsub-api | namespace         | pubsub-api-ns   |                             |
+| pubsub-api | service account   | pubsub-api-ksa  | Kubernetes service account  |
 
 ```bash
-kubectl create namespace bucket-api
-kubectl create namespace pubsub-api
+kubectl create namespace bucket-api-ns
+kubectl create namespace pubsub-api-ns
 
-kubectl create serviceaccount --namespace bucket-api bucket-api-ksa
-kubectl create serviceaccount --namespace pubsub-api pubsub-api-ksa
+kubectl create serviceaccount --namespace bucket-api-ns bucket-api-ksa
+kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 ```
 
 ## Step3: IAM service account for bucket-api
@@ -137,7 +142,7 @@ version: 1
 3.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace bucket-api bucket-api-ksa \
+kubectl annotate serviceaccount --namespace bucket-api-ns bucket-api-ksa \
         iam.gke.io/gcp-service-account=${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -210,8 +215,8 @@ kubectl apply -f bucket-api.yaml
 Confirm that pod configuration and logs after deployment:
 
 ```bash
-kubectl describe pods -n bucket-api
-kubectl logs -l app=bucket-api -n bucket-api
+kubectl describe pods -n bucket-api-ns
+kubectl logs -l app=bucket-api -n bucket-api-ns
 ```
 
 4.3 Invoke `/bucket` API using a load balancer IP:
@@ -268,7 +273,7 @@ version: 1
 5.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace pubsub-api pubsub-api-ksa \
+kubectl annotate serviceaccount --namespace pubsub-api-ns pubsub-api-ksa \
         iam.gke.io/gcp-service-account=${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -345,14 +350,14 @@ Create and deploy K8s Deployment, Service, HorizontalPodAutoscaler, Ingress, and
 ```bash
 sed -e "s|<project-id>|${PROJECT_ID}|g" pubsub-api-template.yaml > pubsub-api.yaml
 cat pubsub-api.yaml
-kubectl apply -f pubsub-api.yaml -n pubsub-api
+kubectl apply -f pubsub-api.yaml -n pubsub-api-ns
 ```
 
 Confirm that pod configuration and logs after deployment:
 
 ```bash
-kubectl describe pods -n pubsub-api
-kubectl logs -l app=pubsub-api -n pubsub-api
+kubectl describe pods -n pubsub-api-ns
+kubectl logs -l app=pubsub-api -n pubsub-api-ns
 ```
 
 Confirm that response of `/pub`, `/sub`, and `/bucket` APIs.

@@ -1,11 +1,19 @@
 variable "project_id" {
-  type = string
+  description = "project id"
+  type        = string
 }
-
 variable "region" {
-  type = string
+  description = "region"
+  type        = string
+  default     = "us-central1"
 }
-
-variable "bucket_name" {
-  type = string
+variable "stage" {
+  description = "stage"
+  type        = string
+  default     = "local"
+}
+variable "backend_bucket" {
+  description = "backend bucket to save tfstate file"
+  type        = string
+  default     = ""
 }
