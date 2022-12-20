@@ -15,7 +15,7 @@
 
 ### Update Terraform variables
 
-[terraform/cluster/terraform.tfvars](terraform.tfvars)
+[terraform/terraform.tfvars](terraform.tfvars)
 
 ```bash
 project_id = "<project-id>"
@@ -33,12 +33,10 @@ stage      = "dev"
 backend_bucket = "terraform-state"
 ```
 
-### Create a GKE cluster
-
-- Create Terraform workspaces
+### Create Terraform workspaces
 
 ```bash
-cd terraform/cluster/
+cd terraform
 
 terraform workspace new dev
 terraform workspace new stg
@@ -46,30 +44,7 @@ terraform workspace select dev
 terraform workspace list
 ```
 
-- Run Terraform
-
-```bash
-terraform init
-
-terraform plan
-
-terraform apply
-```
-
-### Create Service Account & Workload Identity
-
-- Create Terraform workspaces
-
-```bash
-cd ../../terraform/workload-identity/
-
-terraform workspace new dev
-terraform workspace new stg
-terraform workspace select dev
-terraform workspace list
-```
-
-- Run Terraform
+### Run Terraform
 
 ```bash
 terraform init

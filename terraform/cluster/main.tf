@@ -8,10 +8,10 @@ resource "google_container_cluster" "primary" {
   location = var.region
   remove_default_node_pool = true
   initial_node_count       = 1
-  private_cluster_config {
-    enable_private_nodes    = true
-    enable_private_endpoint = false
-  }
+  # private_cluster_config {
+  #   enable_private_nodes    = true
+  #   enable_private_endpoint = false
+  # }
 }
 
 resource "google_container_node_pool" "primary_nodes" {
@@ -43,12 +43,16 @@ module "gke_auth" {
   cluster_name         = google_container_cluster.primary.name
   location             = google_container_cluster.primary.location
   use_private_endpoint = false
+
+  depends_on = [
+    google_container_cluster.primary
+  ]
 }
+
 provider "kubernetes" {
   cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
   host                   = module.gke_auth.host
   token                  = module.gke_auth.token
-  # config_path = "~/.kube/config"
 }
 
 resource "kubernetes_namespace" "bucket-api-ns" {
@@ -59,6 +63,7 @@ resource "kubernetes_namespace" "bucket-api-ns" {
     delete = "30m"
   }
 }
+
 resource "kubernetes_namespace" "pubsub-api-ns" {
   metadata {
     name = "pubsub-api-ns"
@@ -66,27 +71,6 @@ resource "kubernetes_namespace" "pubsub-api-ns" {
   timeouts {
     delete = "30m"
   }
-}
-module "bucket-api-workload-identity" {
-  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  name       = "bucket-api-sa"
-  namespace  =  "bucket-api-ns"
-  project_id = var.project_id
-  roles      = ["roles/storage.admin"]
-  depends_on = [
-    kubernetes_namespace.bucket-api-ns
-  ]
-}
-
-module "pubsub-api-workload-identity" {
-  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  name       = "pubsub-api-sa"
-  namespace  =  "pubsub-api-ns"
-  project_id = var.project_id
-  roles      = ["roles/pubsub.publisher", "roles/pubsub.subscriber"]
-  depends_on = [
-    kubernetes_namespace.pubsub-api-ns
-  ]
 }
 
 data "terraform_remote_state" "this" {
