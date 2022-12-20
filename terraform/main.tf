@@ -8,6 +8,10 @@ resource "google_container_cluster" "primary" {
   location = var.region
   remove_default_node_pool = true
   initial_node_count       = 1
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = true
+  }
 }
 
 resource "google_container_node_pool" "primary_nodes" {
