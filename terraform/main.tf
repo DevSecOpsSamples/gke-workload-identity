@@ -10,7 +10,7 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = 1
   private_cluster_config {
     enable_private_nodes    = true
-    enable_private_endpoint = true
+    enable_private_endpoint = false
   }
 }
 
