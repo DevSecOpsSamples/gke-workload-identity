@@ -126,7 +126,7 @@ kubectl get all -n pubsub-api-ns
 ```bash
 gcloud container clusters update sample-cluster-dev --enable-autoscaling
 
-gcloud compute instances describe gke-sample-cluster-d-sample-cluster-d-5aa5a05c-0gnr  --zone=COMPUTE_ZONE --format="flattened(serviceAccounts[].scopes)"
+gcloud compute instances describe gke-sample-cluster-d-sample-cluster-d-5aa5a05c-0gnr  --zone=us-central1-a --format="flattened(serviceAccounts[].scopes)"
 ```
 
 ### Manifest Deployment
@@ -173,3 +173,5 @@ terraform destroy
 - [Kubernetes Provider](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)
 - [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace)
 - [workload-identity](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/workload-identity)
+
+
