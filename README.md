@@ -89,7 +89,13 @@ Create an Autopilot GKE cluster. It may take around 9 minutes.
 
 ```bash
 gcloud container clusters create-auto sample-cluster-dev --region=${COMPUTE_ZONE}
-gcloud container clusters get-credentials sample-cluster-dev
+```
+
+NAME                     LOCATION     MASTER_VERSION  MASTER_IP       MACHINE_TYPE  NODE_VERSION    NUM_NODES  STATUS
+sample-cluster-dev  us-central1  1.24.5-gke.600  xxx.xxx.xxx.xxx  e2-medium     1.24.5-gke.600  3          RUNNING
+
+```bash
+gcloud container clusters get-credentials sample-cluster-dev --region=${COMPUTE_ZONE}
 ```
 
 ## Step2: Create Kubernetes namespace and service account
@@ -157,7 +163,7 @@ gcloud storage buckets create gs://${GCS_BUCKET_NAME}
 Grant objectAdmin role to IAM service account to access a GCS bucket.
 
 ```bash
-gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin
+gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin \
        gs://${GCS_BUCKET_NAME}/
 ```
 
@@ -222,7 +228,7 @@ kubectl logs -l app=bucket-api -n bucket-api-ns
 4.3 Invoke `/bucket` API using a load balancer IP:
 
 ```bash
-LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }')
+LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
 echo ${LB_IP_ADDRESS}
 
 curl http://${LB_IP_ADDRESS}/
@@ -273,7 +279,7 @@ version: 1
 5.3. Annotate the Kubernetes service account with the email address of the IAM service account.
 
 ```bash
-kubectl annotate serviceaccount --namespace pubsub-api-ns pubsub-api-sa \
+kubectl annotate serviceaccount --namespace pubsub-api-ns pubsub-api-ksa \
         iam.gke.io/gcp-service-account=${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
@@ -365,7 +371,7 @@ kubectl describe service -n pubsub-api-ns
 Confirm that response of `/pub`, `/sub`, and `/bucket` APIs.
 
 ```bash
-LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }')
+LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }' | head -n 1)
 echo ${LB_IP_ADDRESS}
 ```
 
