@@ -7,11 +7,14 @@ GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
 gcloud config set project ${PROJECT_ID}
 gcloud config set compute/zone ${COMPUTE_ZONE}
 
+# Step1: Create a GKE cluster
+
 # Autopilot clusters must be regional clusters
 gcloud container clusters create-auto sample-cluster-auto-dev --zone=${CLUSTER_ZONE}
 gcloud container clusters get-credentials sample-cluster-auto-dev --region ${CLUSTER_ZONE} --project ${PROJECT_ID}
 
 # Step2: Create Kubernetes namespace and service account
+
 kubectl create namespace bucket-api-ns
 kubectl create namespace pubsub-api-ns
 
@@ -19,6 +22,7 @@ kubectl create serviceaccount --namespace bucket-api-ns bucket-api-ksa
 kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 
 # Step3: IAM service account for bucket-api
+
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
 
 gcloud iam service-accounts create ${SERVICE_ACCOUNT} --display-name="bucket-api-ns service account"
@@ -39,6 +43,7 @@ gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccoun
        gs://${GCS_BUCKET_NAME}/
 
 # Step4: Deploy bucket-api
+
 cd bucket-api
 docker build -t bucket-api . --platform linux/amd64
 docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
@@ -62,6 +67,7 @@ echo "http://${LB_IP_ADDRESS}/bucket" && curl http://${LB_IP_ADDRESS}/bucket
 
 
 # Step5: IAM service account for pubsub-api
+
 echo "PROJECT_ID: ${PROJECT_ID}, PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
 
 gcloud iam service-accounts create ${PUBSUB_SERVICE_ACCOUNT} --display-name="pubsub-api-ns service account"
