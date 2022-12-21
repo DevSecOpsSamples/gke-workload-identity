@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 COMPUTE_ZONE="us-central1-a"
 CLUSTER_ZONE="us-central1"
 SERVICE_ACCOUNT="bucket-api-sa"
