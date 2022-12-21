@@ -13,7 +13,6 @@ In this sample project, we will learn GKE security with the IAM service account 
 >
 > https://cloud.google.com/kubernetes-engine/docs/concepts/workload-identity
 
-
 ## Objectives
 
 Learn the features below:
@@ -63,15 +62,15 @@ PROJECT_ID="sample-project"
 COMPUTE_ZONE="us-central1"
 SERVICE_ACCOUNT="bucket-api-sa"
 PUBSUB_SERVICE_ACCOUNT="pubsub-api-sa"
-GCS_BUCKET_NAME="bucket-api"
+GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
 ```
 
 |   | Environment Variable           | Value             | Description                     |
 |---|--------------------------------|-------------------|---------------------------------|
 | 1 | PROJECT_ID                     | sample-project    | This variable will also be used for pub/sub deployment.          |
 | 2 | COMPUTE_ZONE                   | us-central1       | Run `gcloud compute zones list` to get all zones.                |
-| 3 | SERVICE_ACCOUNT                | bucket-api-sa        | IAM service account for bucket-api to access to GCS bucket only. |
-| 4 | PUBSUB_SERVICE_ACCOUNT         | pubsub-api-sa        | IAM service account for pubsub-api to access to pub/sub only.    |
+| 3 | SERVICE_ACCOUNT                | bucket-api-sa     | IAM service account for bucket-api to access to GCS bucket only. |
+| 4 | PUBSUB_SERVICE_ACCOUNT         | pubsub-api-sa     | IAM service account for pubsub-api to access to pub/sub only.    |
 | 5 | GCS_BUCKET_NAME                | bucket-api        |           |
 
 ### Set GCP project
@@ -88,15 +87,20 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 Create an Autopilot GKE cluster. It may take around 9 minutes.
 
 ```bash
-gcloud container clusters create-auto sample-cluster-dev --region=${COMPUTE_ZONE}
+CLUSTER_ZONE="us-central1"
+gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_ZONE} --project ${PROJECT_ID}
 ```
-
-NAME                     LOCATION     MASTER_VERSION  MASTER_IP       MACHINE_TYPE  NODE_VERSION    NUM_NODES  STATUS
-sample-cluster-dev  us-central1  1.24.5-gke.600  xxx.xxx.xxx.xxx  e2-medium     1.24.5-gke.600  3          RUNNING
 
 ```bash
-gcloud container clusters get-credentials sample-cluster-dev --region=${COMPUTE_ZONE}
+NAME                LOCATION     MASTER_VERSION  MASTER_IP        MACHINE_TYPE  NODE_VERSION    NUM_NODES  STATUS
+sample-cluster-dev  us-central1  1.24.5-gke.600  xxx.xxx.xxx.xxx  e2-medium     1.24.5-gke.600  3          RUNNING
 ```
+
+```bash
+gcloud container clusters get-credentials sample-cluster-dev --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
+```
+
+If you want to use a Standard mode cluster instead of Autopilot GKE cluster. Refer to the [README-standard-cluster.md](README-standard-cluster.md).
 
 ## Step2: Create Kubernetes namespace and service account
 
@@ -229,20 +233,15 @@ kubectl logs -l app=bucket-api -n bucket-api-ns
 
 ```bash
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
-echo ${LB_IP_ADDRESS}
-
-curl http://${LB_IP_ADDRESS}/
+echo "http://${LB_IP_ADDRESS}/" && curl http://${LB_IP_ADDRESS}/
+echo "http://${LB_IP_ADDRESS}/bucket" && curl http://${LB_IP_ADDRESS}/bucket
 ```
 
 ```json
+http://34.149.214.247/
 {"host":"34.149.214.247","message":"bucket-api","method":"GET","url":"http://34.149.214.247/"}
-```
 
-```bash
-curl http://${LB_IP_ADDRESS}/bucket
-```
-
-```json
+http://34.149.214.247/bucket
 {"blob_name":"put-test.txt","bucket_name":"bucket-api","response":"read/write test, bucket: bucket-api"}
 ```
 
@@ -447,6 +446,14 @@ gcloud iam service-accounts delete "${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.
 
 docker system prune -a
 ```
+
+## Troubleshooting
+
+- GCS bucket permission error
+
+    Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
+
+    If working fine with credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
 
 ## References
 

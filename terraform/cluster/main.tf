@@ -12,6 +12,10 @@ resource "google_container_cluster" "primary" {
   #   enable_private_nodes    = true
   #   enable_private_endpoint = false
   # }
+
+  # workload_identity_config {
+  #     identity_namespace = "${var.project_id}.svc.id.goog"
+  # }
 }
 
 resource "google_container_node_pool" "primary_nodes" {

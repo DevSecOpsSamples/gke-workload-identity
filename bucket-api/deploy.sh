@@ -8,8 +8,7 @@ docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
 docker push gcr.io/${PROJECT_ID}/bucket-api:latest
 
 kubectl scale deployment bucket-api --replicas=0 -n bucket-api-ns
-kubectl rollout status deployment/bucket-api
-kubectl scale deployment bucket-api --replicas=3 -n bucket-api-ns
-kubectl rollout status deployment/bucket-api
+kubectl scale deployment bucket-api --replicas=1 -n bucket-api-ns
+sleep 3
 
 kubectl get pods -n bucket-api-ns
