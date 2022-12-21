@@ -28,7 +28,12 @@ def ping():
 
 @app.route("/bucket")
 def bucket():
-    return write_read('bucket-api', 'put-test.txt')
+    bucket_name = os.getenv('GCS_BUCKET_NAME')
+    if bucket_name == None:
+        for k, v in os.environ.items():
+            print(f'{k}={v}')
+        raise ValueError('Invalid BUCKET_NAME enrironment variable')
+    return write_read(bucket_name, 'put-test.txt')
 
 def write_read(bucket_name, blob_name):
     response = ""
