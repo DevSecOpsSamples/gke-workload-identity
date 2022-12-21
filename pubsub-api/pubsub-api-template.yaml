@@ -21,6 +21,9 @@ spec:
         - name: pubsub-api
           image: gcr.io/<project-id>/pubsub-api:latest
           imagePullPolicy: Always
+          env:
+          - name: GCS_BUCKET_NAME
+            value: "<project-id>-bucket-api"
           ports:
             - containerPort: 8000
           resources:
