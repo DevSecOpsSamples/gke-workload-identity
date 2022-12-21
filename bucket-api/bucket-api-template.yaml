@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bucket-api
-  namespace: bucket-api
+  namespace: bucket-api-ns
   annotations:
     app: 'bucket-api'
 spec:
@@ -21,6 +21,9 @@ spec:
         - name: bucket-api
           image: gcr.io/<project-id>/bucket-api:latest
           imagePullPolicy: Always
+          env:
+          - name: GCS_BUCKET_NAME
+            value: "<project-id>-bucket-api"
           ports:
             - containerPort: 8000
           resources:
@@ -32,9 +35,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bucket-api
-  namespace: bucket-api
+  namespace: bucket-api-ns
   annotations:
     app: 'bucket-api'
+    cloud.google.com/neg: '{"ingress": true}'
     cloud.google.com/backend-config: '{"default": "bucket-api-backend-config"}'
 spec:
   selector:
@@ -49,7 +53,7 @@ apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: 'bucket-api-hpa'
-  namespace: bucket-api
+  namespace: bucket-api-ns
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -69,7 +73,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "bucket-api-ingress"
-  namespace: bucket-api
+  namespace: bucket-api-ns
   annotations:
     app: 'bucket-api'
     kubernetes.io/ingress.class: gce
@@ -89,7 +93,7 @@ apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
   name: bucket-api-backend-config
-  namespace: bucket-api
+  namespace: bucket-api-ns
 spec:
   healthCheck:
     checkIntervalSec: 10

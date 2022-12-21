@@ -7,22 +7,40 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  docker-build-bucket-api:
+  build-docker-bucket-api:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: cd bucket-api && docker build . -t bucket-api:$(date +%s)
-  docker-build-pubsub-api:
+
+  build-docker-pubsub-api:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: cd pubsub-api && docker build . -t pubsub-api:$(date +%s)
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Validate
+      run: terraform validate -no-color
+
   sonarqube:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 11
