@@ -33,7 +33,8 @@ Updating node pool default-pool... Updating default-pool, done with 1 out of 3 n
 Updating node pool default-pool... Updating default-pool, done with 2 out of 3 nodes (66.7%): 1 being processed...  
 Updating node pool default-pool... Updating default-pool, done with 3 out of 3 nodes (100.0%): 1 succeeded...done.                                                                                      
 Updated [https://container.googleapis.com/v1/projects/moloco-sre/zones/us-central1-a/clusters/sample-cluster-test-dev/nodePools/default-pool].
-gcloud container node-pools update default-pool    3.64s user 0.66s system 0% cpu 12:37.33 total
+gcloud container node-pools update default-pool    
+3.64s user 0.66s system 0% cpu 12:37.33 total
 ```
 
 ```bash

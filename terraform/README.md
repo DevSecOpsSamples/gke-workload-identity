@@ -124,7 +124,7 @@ kubectl get all -n pubsub-api-ns
 ### Enable Workload Identy
 
 ```bash
-#gcloud container clusters update sample-cluster-dev --enable-autoscaling
+TBD
 ```
 
 ### Manifest Deployment
@@ -171,5 +171,3 @@ terraform destroy
 - [Kubernetes Provider](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)
 - [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace)
 - [workload-identity](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/workload-identity)
-
-
