@@ -58,7 +58,7 @@ kubectl logs -l app=bucket-api -n bucket-api-ns
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
 echo ${LB_IP_ADDRESS}
 
-# it take several minutes to connect
+# It takes several minutes to connect
 curl http://${LB_IP_ADDRESS}/
 curl http://${LB_IP_ADDRESS}/bucket
 
@@ -119,7 +119,7 @@ kubectl describe service -n pubsub-api-ns
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep pubsub-api | awk '{ print $2 }' | head -n 1)
 echo ${LB_IP_ADDRESS}
 
-# it take several minutes to connect
+# It takes several minutes to connect
 curl http://${LB_IP_ADDRESS}/pub
 curl http://${LB_IP_ADDRESS}/sub
 curl http://${LB_IP_ADDRESS}/bucket
