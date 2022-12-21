@@ -30,7 +30,10 @@ pip install --upgrade google-cloud-storage
 ```
 
 ```bash
+export GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
+echo "GCS_BUCKET_NAME: ${GCS_BUCKET_NAME}"
 export GOOGLE_APPLICATION_CREDENTIALS="./service-account.json"
+cat ${GOOGLE_APPLICATION_CREDENTIALS}
 python3 app.py
 ```
 

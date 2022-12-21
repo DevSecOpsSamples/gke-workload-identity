@@ -2,7 +2,7 @@ COMPUTE_ZONE="us-central1-a"
 CLUSTER_ZONE="us-central1"
 SERVICE_ACCOUNT="bucket-api-sa"
 PUBSUB_SERVICE_ACCOUNT="pubsub-api-sa"
-GCS_BUCKET_NAME="bucket-api"
+GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
 
 gcloud config set project ${PROJECT_ID}
 gcloud config set compute/zone ${COMPUTE_ZONE}
@@ -18,7 +18,6 @@ kubectl create namespace pubsub-api-ns
 kubectl create serviceaccount --namespace bucket-api-ns bucket-api-ksa
 kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 
-
 # Step3: IAM service account for bucket-api
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
 
@@ -33,15 +32,14 @@ gcloud iam service-accounts add-iam-policy-binding \
 kubectl annotate serviceaccount --namespace bucket-api-ns bucket-api-ksa \
         iam.gke.io/gcp-service-account=${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
 
-GCS_BUCKET_NAME="z_wi-test-bucket-api"
+echo "GCS_BUCKET_NAME: ${GCS_BUCKET_NAME}"
 gcloud storage buckets create gs://${GCS_BUCKET_NAME}
 
 gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com:objectAdmin \
        gs://${GCS_BUCKET_NAME}/
 
-
 # Step4: Deploy bucket-api
-cd bucket-api 
+cd bucket-api
 docker build -t bucket-api . --platform linux/amd64
 docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
 
@@ -54,13 +52,13 @@ kubectl apply -f bucket-api.yaml
 
 kubectl describe pods -n bucket-api-ns
 kubectl logs -l app=bucket-api -n bucket-api-ns
+kubectl describe service -n bucket-api-ns
 
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
-echo ${LB_IP_ADDRESS}
 
 # It takes several minutes to connect
-curl http://${LB_IP_ADDRESS}/
-curl http://${LB_IP_ADDRESS}/bucket
+echo "http://${LB_IP_ADDRESS}/" && curl http://${LB_IP_ADDRESS}/
+echo "http://${LB_IP_ADDRESS}/bucket" && curl http://${LB_IP_ADDRESS}/bucket
 
 
 # Step5: IAM service account for pubsub-api

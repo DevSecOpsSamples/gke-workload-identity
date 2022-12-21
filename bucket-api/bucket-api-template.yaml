@@ -21,6 +21,9 @@ spec:
         - name: bucket-api
           image: gcr.io/<project-id>/bucket-api:latest
           imagePullPolicy: Always
+          env:
+          - name: GCS_BUCKET_NAME
+            value: "<project-id>-bucket-api"
           ports:
             - containerPort: 8000
           resources:
