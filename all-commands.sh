@@ -127,3 +127,4 @@ echo ${LB_IP_ADDRESS}
 curl http://${LB_IP_ADDRESS}/pub
 curl http://${LB_IP_ADDRESS}/sub
 curl http://${LB_IP_ADDRESS}/bucket
+
