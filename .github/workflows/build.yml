@@ -8,7 +8,6 @@ on:
     types: [opened, synchronize, reopened]
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
 jobs:
   build-docker-bucket-api:
@@ -66,7 +65,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+          credentials_json: '${{ secrets.SA }}'
       - run: env && pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
