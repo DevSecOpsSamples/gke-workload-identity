@@ -60,6 +60,7 @@ def handle_exception(e):
         "code": e.code,
         "name": e.name,
         "description": e.description,
+        
     })
     response.content_type = "application/json"
     return response

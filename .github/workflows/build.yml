@@ -72,9 +72,7 @@ jobs:
           echo '${{ secrets.SA }}' > sa 
           echo "GOOGLE_CLOUD_PROJECT=${{ secrets.GOOGLE_CLOUD_PROJECT }}" >> $GITHUB_ENV
           echo "GOOGLE_APPLICATION_CREDENTIALS=sa" >> $GITHUB_ENV
-          echo $GOOGLE_CLOUD_PROJECT
-          echo $GOOGLE_APPLICATION_CREDENTIALS
-          cat sa
+          pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -91,6 +89,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.SA }}
+          GOOGLE_APPLICATION_CREDENTIALS: sa
         run: ./gradlew build sonarqube --info
           
