@@ -8,10 +8,6 @@ import main
 
 class RestAPIsTestCase(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        logging.basicConfig(level=logging.DEBUG)
-
     def test_root(self):
         response = main.app.test_client().get("/")
         self.assertEqual(response.status_code, 200)
