@@ -6,6 +6,10 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
 jobs:
   build-docker-bucket-api:
     runs-on: ubuntu-latest
