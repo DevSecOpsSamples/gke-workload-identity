@@ -32,11 +32,6 @@ sonarqube {
 }
 
 clean.doFirst {
-    delete "${rootDir}/.coverage"
-    delete "${rootDir}/coverage.xml"
-    delete "${rootDir}/nosetests.xml"
-    delete "${rootDir}/result.xml"
-    delete "${rootDir}/report.html"
     delete "${rootDir}/bucket-api/bucket-api.yaml"
     delete "${rootDir}/pubsub-api/pubsub-api.yaml"
 }
