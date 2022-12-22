@@ -1,8 +1,6 @@
 import os
-import logging
 import unittest
 from unittest import mock
-from test import support
 
 import main
 

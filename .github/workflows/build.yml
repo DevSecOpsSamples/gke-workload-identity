@@ -73,8 +73,6 @@ jobs:
           echo $GOOGLE_CLOUD_PROJECT
           echo $GOOGLE_APPLICATION_CREDENTIALS
           cat sa
-      - name: Python unit tests
-        run: env && gradle test && rm sa && ls -alh
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:

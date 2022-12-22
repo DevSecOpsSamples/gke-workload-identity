@@ -5,12 +5,10 @@ plugins {
 
 task build(overwrite: true, dependsOn:['test'])
 
-task test {
-    doLast {
-        exec {
-            executable "pytest"
-        }
-    }
+task all(dependsOn:['clean', 'test', 'sonarqube'])
+
+task test(type:Exec) {
+    commandLine 'pytest'
 }
 
 sonarqube {
@@ -23,7 +21,9 @@ sonarqube {
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.sources", "."
         property "sonar.python.version", "3.9"
-        property "sonar.coverage.jacoco.xmlReportPaths", "coverage.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/test-result.xml"
+        property "sonar.python.coverage.reportPaths", "build/test-coverage.xml"
+        property "sonar.exclusions", "build/**"
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "terraform:S6404"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.tf"
@@ -35,6 +35,8 @@ clean.doFirst {
     delete "${rootDir}/.coverage"
     delete "${rootDir}/coverage.xml"
     delete "${rootDir}/nosetests.xml"
+    delete "${rootDir}/result.xml"
+    delete "${rootDir}/report.html"
     delete "${rootDir}/bucket-api/bucket-api.yaml"
     delete "${rootDir}/pubsub-api/pubsub-api.yaml"
 }
