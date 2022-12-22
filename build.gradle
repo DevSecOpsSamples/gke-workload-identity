@@ -7,6 +7,16 @@ repositories {
 	mavenCentral()
 }
 
+task build(overwrite: true, dependsOn:['test'])
+
+task test {
+    doLast {
+        exec {
+            executable "pytest"
+        }
+    }
+}
+
 sonarqube {
     properties {
         property "sonar.projectName", "gke-workload-identity"
