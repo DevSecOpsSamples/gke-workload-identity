@@ -70,8 +70,11 @@ jobs:
           echo '${{ secrets.SA }}' > sa 
           echo "GOOGLE_CLOUD_PROJECT=${{ secrets.GOOGLE_CLOUD_PROJECT }}" >> $GITHUB_ENV
           echo "GOOGLE_APPLICATION_CREDENTIALS=sa" >> $GITHUB_ENV
+          echo $GOOGLE_CLOUD_PROJECT
+          echo $GOOGLE_APPLICATION_CREDENTIALS
+          cat sa
       - name: Python unit tests
-        run: env && pytest
+        run: env && pytest && rm sa
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
