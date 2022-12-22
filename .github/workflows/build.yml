@@ -6,6 +6,10 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
+env:
+  GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
+  SA: ${{ secrets.SA }}
+
 jobs:
   build-docker-bucket-api:
     runs-on: ubuntu-latest
@@ -47,6 +51,21 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install --upgrade google-cloud-storage
+          pip install --upgrade google-cloud-pubsub
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.SA }}'
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -61,6 +80,8 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: sa
         run: ./gradlew build sonarqube --info
+          
