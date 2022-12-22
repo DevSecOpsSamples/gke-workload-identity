@@ -3,10 +3,6 @@ plugins {
   	id "org.sonarqube" version "3.4.0.2513"
 }
 
-repositories {
-	mavenCentral()
-}
-
 task build(overwrite: true, dependsOn:['test'])
 
 task test {
@@ -33,4 +29,12 @@ sonarqube {
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.tf"
         property "sonar.links.ci", "https://github.com/DevSecOpsSamples/gke-workload-identity/actions"
     }
+}
+
+clean.doFirst {
+    delete "${rootDir}/.coverage"
+    delete "${rootDir}/coverage.xml"
+    delete "${rootDir}/nosetests.xml"
+    delete "${rootDir}/bucket-api/bucket-api.yaml"
+    delete "${rootDir}/pubsub-api/pubsub-api.yaml"
 }
