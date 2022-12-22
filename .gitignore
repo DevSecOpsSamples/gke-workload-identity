@@ -19,6 +19,7 @@ build
 terraform.tfvars*
 
 # GKE
+sa
 service-account.json
 
 # k8s
