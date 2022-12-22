@@ -25,3 +25,6 @@ class RestAPIsTestCase(unittest.TestCase):
     def test_bucket_invalid_bucket_name(self):
         response = main.app.test_client().get("/bucket")
         self.assertEqual(response.status_code, 500, 'response : %s' % response.data)
+
+    def test_credential(self):
+        print('GOOGLE_APPLICATION_CREDENTIALS: {}'.format(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')))
