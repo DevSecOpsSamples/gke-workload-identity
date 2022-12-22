@@ -67,12 +67,6 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.SA }}'
-      - name: SA
-        run: |
-          echo '${{ secrets.SA }}' > sa 
-          echo "GOOGLE_CLOUD_PROJECT=${{ secrets.GOOGLE_CLOUD_PROJECT }}" >> $GITHUB_ENV
-          echo "GOOGLE_APPLICATION_CREDENTIALS=sa" >> $GITHUB_ENV
-          pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
