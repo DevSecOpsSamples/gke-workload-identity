@@ -15,7 +15,7 @@ class RestAPIsTestCase(unittest.TestCase):
 
     def test_bucket_invalid_bucket_name(self):
         """ GCS_BUCKET_NAME is None """
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError):
             main.app.test_client().get("/bucket")
 
     @mock.patch.dict(os.environ, {"GCS_BUCKET_NAME": "PROJECT-ID-bucket-api"}, clear=True) 
