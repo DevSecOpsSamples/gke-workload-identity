@@ -7,7 +7,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 env:
-  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
 
 jobs:
   build-docker-bucket-api:
