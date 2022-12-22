@@ -32,7 +32,3 @@ class RestAPIsTestCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {"GCS_BUCKET_NAME": "project-id-372417-bucket-api"}, clear=True)
     def test_env(self):
         self.assertEqual(os.environ.get("GCS_BUCKET_NAME"), "project-id-372417-bucket-api")
-
-    def test_credential(self):
-        print('GOOGLE_CLOUD_PROJECT: {}'.format(os.environ.get('GOOGLE_CLOUD_PROJECT')))
-        print('GOOGLE_APPLICATION_CREDENTIALS: {}'.format(os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')))
