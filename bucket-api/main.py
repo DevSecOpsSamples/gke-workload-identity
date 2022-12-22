@@ -2,11 +2,14 @@ import os
 from flask import Flask
 from flask import request
 from flask import json
+from flask_wtf.csrf import CSRFProtect
 from werkzeug.exceptions import HTTPException
 
 from google.cloud import storage
 
 app = Flask(__name__)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 @app.route("/")
 def ping_root():
@@ -57,6 +60,7 @@ def handle_exception(e):
         "code": e.code,
         "name": e.name,
         "description": e.description,
+        
     })
     response.content_type = "application/json"
     return response
