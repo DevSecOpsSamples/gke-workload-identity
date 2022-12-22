@@ -61,12 +61,14 @@ jobs:
           pip install -r requirements.txt
           pip install --upgrade google-cloud-storage
           pip install --upgrade google-cloud-pubsub
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: '${{ secrets.SA }}'
-      - run: env && pytest
+      # - name: 'Authenticate to Google Cloud'
+      #   uses: 'google-github-actions/auth@v1'
+      #   with:
+      #     credentials_json: '${{ secrets.SA }}'
+      - name: SA
+        run: echo '${{ secrets.SA }}' > sa && GOOGLE_APPLICATION_CREDENTIALS=sa
+      - name: Python unit tests
+        run: env && pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:

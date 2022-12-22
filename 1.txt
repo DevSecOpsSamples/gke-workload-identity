@@ -1,0 +1,29 @@
+{"type": "service_account","project_id": "moloco-sre","private_key_id": "5353a1d2b9ecab019ba23c2f0154412260000941","private_key": "-----BEGIN PRIVATE KEY-----
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDD+Nm5uwyqNOtw
+eKAzm+7nWBqko5BKYF8/gbFuhFjnjGRMW0K7dquk29BTPYIA74Ju2mePMxFQwXlO
+PurzTPV9pGLZ2F42AjOaYVyGlKOvWFB8RxEQM9IyWZcIGltoDEL92/2S5oM0pJjn
+wR9EB4B4OxIqCo20oCgYlwEI4FJs4IqgDub+sgKE0HiZwAMPHbbsJoalckwAdhW0
+0bC6/0QMBnYFRjPR8d4g024GTBU7AdunNpdXrkBcQukjnZHaKPswOyg+UWKYswxj
+sXB3g/E1Kgo5uFrkxtNklels21kwN1assIE56xsK7gfiFf+h9j0dqsJ4ncwxj7or
+yQXTF41ZAgMBAAECggEACfYWARwaKHOwrQKgqAbq1Z0Tm59JyBIOfWCnB3ZYO4rW
+FVCFO5isYGCg/f4wI8KI54AYB/4hSPDQrPLDSBM3HkgTEz4ticLCYzxEMv4OtOzB
+CJQnMKLlshP+OpX2Y/tNk3BRexxW+n/MWulk4LUd6V6dTYBEVDRY3Wkdjxkx72FC
+rXmkM+pUvCNmFxuHoYMXfsNlaGyhzXWx2qMQonMEStNgb8a2N4+EqwSdNtAgNF6L
+bfDYlALd1kp0845QG9DzBoEBnluFmDCmEsB7AsZbj80zWYicQusKa1gNBrnU1MK5
+T/5Lvg9lWhAz3Id20WX7dIAROGyzuefwrGlavM+XAQKBgQDxI3GmiVbNmIUdOwuw
+4jCgGVSltnPtITjQhwN5m46HRhCWT7xavftzEQY6OAubEBKslz5Xt559ZrLY39Cw
+v9dxSmgGOxWooVHYBM+bEaVYdY/oRGwUTRxRRvVdpvwJ9GF7ZWNgL6Wfveb9U8a0
+legfXoY8AQX7zIEbqau0vCoc2QKBgQDQDMuJ/2RXEKvv9IKoqivaro5Q6jnaTVfz
+aAYtoYhPqUOQ93GGrQuDvxH7k+XpFDnMrcZzFgIh+D/CCFaKN1fo9l0ke3OFk/8b
+ZxThAGbcXMs1K+HgTjbsD0JDcAtDH4M9QySmhFpkHXk+Qb58Gx0OIO4ZkvnhN1bF
++yrPtASkgQKBgQCfNl7IrW9hqe1iAmVSsdWXL4JjM5dRHxlLHYne1iWCDXHQPO9J
+Hp0SOVBaSjzncfJSgD3KXtNHSvKVHRnGSbQu+gi67HH9eB34uhx0726zfFO68MpH
+kS48P9SrtCA/VlqyxZuam3sIgLMt2g2dmEi9xYRtw+M2gK1SHXHgkEhh6QKBgQDD
+vgYSQ/NH5yudi9MSlWjFSs4jWvwrY/GH1Sta60uwh3RGhEiPiWf4AGEO7cu2S41G
+AYlg5igDhemWyPmC+ScAzCo+FNhPqTqvsYB3YUVltviJgkv2GiCaYJDbmiM+d/um
+O/HTqVrSLtjPtlNduLTRgjICZcIsH0DI7NMOsDReAQKBgQCrCTiNszR04ZvyX1A+
+v5OS+7kEvJEGQwQ0Q4F7irMqYEoSC1f/JjbvtCvQRrHWyiUHz/c/CDHEXsZ+68j6
+8J7nPvMBX9+vDIPAgcdaOAf6pP9jSKRL97betiZs62Y8X40dbn/oHO6nl+P+4lXu
+u3EX12zrzeo44ZuJWHMPHNkZ3w==
+-----END PRIVATE KEY-----
+","client_email": "bucket-api-standard-sa@moloco-sre.iam.gserviceaccount.com","client_id": "112210009394329685240","auth_uri": "https://accounts.google.com/o/oauth2/auth","token_uri": "https://oauth2.googleapis.com/token","auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bucket-api-standard-sa%40moloco-sre.iam.gserviceaccount.com" }
