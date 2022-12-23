@@ -26,20 +26,20 @@ jobs:
       run: cd pubsub-api && docker build . -t pubsub-api:$(date +%s)
 
   terraform:
+    strategy:
+      matrix:
+        version: [cluster, workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
-
-    - name: Terraform fmt
-      run: terraform fmt -check
+    - run: terraform fmt -check
       continue-on-error: true
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Validate
-      run: terraform validate -no-color
+      working-directory: ${{ matrix.version }}
+    - run: terraform init
+      working-directory: ${{ matrix.version }}
+    - run: terraform validate -no-color
+      working-directory: ${{ matrix.version }}
 
   sonarqube:
     runs-on: ubuntu-latest
