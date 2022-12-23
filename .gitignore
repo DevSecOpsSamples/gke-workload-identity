@@ -20,6 +20,7 @@ terraform.tfvars*
 
 # GKE
 sa
+gha-creds-*.json
 service-account.json
 
 # k8s
