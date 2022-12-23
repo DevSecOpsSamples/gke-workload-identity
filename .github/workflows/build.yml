@@ -28,7 +28,7 @@ jobs:
   terraform:
     strategy:
       matrix:
-        version: [cluster, workload-identity]
+        version: [terraform/cluster, terraform/workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
