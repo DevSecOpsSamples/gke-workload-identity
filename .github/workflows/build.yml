@@ -16,30 +16,30 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd bucket-api && docker build . -t bucket-api:$(date +%s)
+      run: cd src/bucket-api && docker build . -t bucket-api:$(date +%s)
 
   build-docker-pubsub-api:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd pubsub-api && docker build . -t pubsub-api:$(date +%s)
+      run: cd src/pubsub-api && docker build . -t pubsub-api:$(date +%s)
 
   terraform:
     strategy:
       matrix:
-        version: [terraform/cluster, terraform/workload-identity]
+        path: [src/terraform/cluster, src/terraform/workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
     - run: terraform fmt -check
       continue-on-error: true
-      working-directory: ${{ matrix.version }}
+      working-directory: ${{ matrix.path }}
     - run: terraform init
-      working-directory: ${{ matrix.version }}
+      working-directory: ${{ matrix.path }}
     - run: terraform validate -no-color
-      working-directory: ${{ matrix.version }}
+      working-directory: ${{ matrix.path }}
 
   sonarqube:
     runs-on: ubuntu-latest
