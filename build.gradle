@@ -36,4 +36,5 @@ clean.doFirst {
     delete "${rootDir}/pubsub-api/pubsub-api.yaml"
     delete "${rootDir}/.coverage"
     delete "${rootDir}/.pytest_cache"
+    delete fileTree(dir: 'src' , include: '**/__pycache__')
 }
