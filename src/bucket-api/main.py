@@ -53,6 +53,18 @@ def write_read(bucket_name, blob_name):
         "response": response
     }
 
+@app.route("/buckets")
+def buckets():
+    response = ""
+    storage_client = storage.Client()
+    buckets = storage_client.list_buckets()
+    for bucket in buckets:
+        response += ' '+ bucket.name
+    
+    return {
+        "response": response
+    }
+
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     response = e.get_response()

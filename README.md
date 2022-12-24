@@ -57,8 +57,8 @@ If you use the Terraform, you can create all resources Terraform at a time. Plea
 ### Set environment variables
 
 ```bash
-# replace with your project
-PROJECT_ID="sample-project"
+# echo "export PROJECT_ID=<your-project-id>" >> ~/.bashrc
+PROJECT_ID="<your-project-id>"
 COMPUTE_ZONE="us-central1"
 SERVICE_ACCOUNT="bucket-api-sa"
 PUBSUB_SERVICE_ACCOUNT="pubsub-api-sa"
@@ -84,11 +84,11 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 
 ## Step1: Create a GKE cluster
 
-Create an Autopilot GKE cluster. It may take around 9 minutes.
+Create an Autopilot GKE cluster. Autopilot clusters must be regional clusters and it may take around 9 minutes.
 
 ```bash
-CLUSTER_ZONE="us-central1"
-gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_ZONE} --project ${PROJECT_ID}
+CLUSTER_REGION="us-central1" 
+gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
 ```
 
 ```bash
@@ -175,7 +175,7 @@ Refer to the https://cloud.google.com/storage/docs/access-control/iam-roles page
 
 Use `serviceAccountName` for Pods:
 
-[bucket-api-template.yaml](bucket-api/bucket-api-template.yaml):
+[src/bucket-api/bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml):
 
 ```yaml
 apiVersion: apps/v1
@@ -207,6 +207,8 @@ spec:
 4.1. Build and push to GCR:
 
 ```bash
+cd src/bucket-api
+
 docker build -t bucket-api . --platform linux/amd64
 docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
 
@@ -233,15 +235,14 @@ kubectl logs -l app=bucket-api -n bucket-api-ns
 
 ```bash
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
-echo "http://${LB_IP_ADDRESS}/" && curl http://${LB_IP_ADDRESS}/
-echo "http://${LB_IP_ADDRESS}/bucket" && curl http://${LB_IP_ADDRESS}/bucket
+echo "http://${LB_IP_ADDRESS}/" 
+curl http://${LB_IP_ADDRESS}/
+curl http://${LB_IP_ADDRESS}/bucket
 ```
 
 ```json
-http://34.149.214.247/
 {"host":"34.149.214.247","message":"bucket-api","method":"GET","url":"http://34.149.214.247/"}
 
-http://34.149.214.247/bucket
 {"blob_name":"put-test.txt","bucket_name":"bucket-api","response":"read/write test, bucket: bucket-api"}
 ```
 
