@@ -7,8 +7,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 env:
-  GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-  SA: ${{ secrets.SA }}
+  GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
 
 jobs:
   build-docker-bucket-api:
@@ -16,37 +15,37 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd bucket-api && docker build . -t bucket-api:$(date +%s)
+      run: cd src/bucket-api && docker build . -t bucket-api:$(date +%s)
 
   build-docker-pubsub-api:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd pubsub-api && docker build . -t pubsub-api:$(date +%s)
+      run: cd src/pubsub-api && docker build . -t pubsub-api:$(date +%s)
 
   terraform:
+    strategy:
+      matrix:
+        path: [src/terraform/cluster, src/terraform/workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
-
-    - name: Terraform fmt
-      run: terraform fmt -check
+    - run: terraform fmt -check
       continue-on-error: true
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Validate
-      run: terraform validate -no-color
+      working-directory: ${{ matrix.path }}
+    - run: terraform init
+      working-directory: ${{ matrix.path }}
+    - run: terraform validate -no-color
+      working-directory: ${{ matrix.path }}
 
   sonarqube:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -66,6 +65,10 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.SA }}'
+      - name: pytest with credential path
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(ls gha-creds-*.json)" >> $GITHUB_ENV
+          pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -82,6 +85,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: sa
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
         run: ./gradlew build sonarqube --info
           

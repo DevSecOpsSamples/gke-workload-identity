@@ -23,7 +23,7 @@ sonarqube {
         property "sonar.python.version", "3.9"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/test-result.xml"
         property "sonar.python.coverage.reportPaths", "build/test-coverage.xml"
-        property "sonar.exclusions", "build/**, gha-creds-*.json"
+        property "sonar.exclusions", "build/**, gha-creds-*.json, .*sa"
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "terraform:S6404"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.tf"
@@ -34,4 +34,7 @@ sonarqube {
 clean.doFirst {
     delete "${rootDir}/bucket-api/bucket-api.yaml"
     delete "${rootDir}/pubsub-api/pubsub-api.yaml"
+    delete "${rootDir}/.coverage"
+    delete "${rootDir}/.pytest_cache"
+    delete fileTree(dir: 'src' , include: '**/__pycache__')
 }

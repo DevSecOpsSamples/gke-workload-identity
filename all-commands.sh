@@ -12,8 +12,8 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 
 # Step1: Create a GKE cluster
 
-# Autopilot clusters must be regional clusters
-gcloud container clusters create-auto sample-cluster-auto-dev --zone=${CLUSTER_ZONE}
+CLUSTER_REGION="us-central1"
+gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
 gcloud container clusters get-credentials sample-cluster-auto-dev --region ${CLUSTER_ZONE} --project ${PROJECT_ID}
 
 # Step2: Create Kubernetes namespace and service account
@@ -47,7 +47,7 @@ gsutil iam ch serviceAccount:${SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccoun
 
 # Step4: Deploy bucket-api
 
-cd bucket-api
+cd src/bucket-api
 docker build -t bucket-api . --platform linux/amd64
 docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
 

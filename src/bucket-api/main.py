@@ -33,7 +33,7 @@ def bucket():
     if bucket_name == None:
         for k, v in os.environ.items():
             print(f'{k}={v}')
-        raise ValueError('Invalid BUCKET_NAME enrironment variable')
+        raise ValueError('Invalid GCS_BUCKET_NAME enrironment variable')
     return write_read(bucket_name, 'put-test.txt')
 
 def write_read(bucket_name, blob_name):
@@ -50,6 +50,18 @@ def write_read(bucket_name, blob_name):
     return {
         "bucket_name": bucket_name,
         "blob_name": blob_name,
+        "response": response
+    }
+
+@app.route("/buckets")
+def buckets():
+    response = ""
+    storage_client = storage.Client()
+    buckets = storage_client.list_buckets()
+    for bucket in buckets:
+        response += ' '+ bucket.name
+    
+    return {
         "response": response
     }
 

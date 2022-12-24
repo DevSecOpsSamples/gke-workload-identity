@@ -18,11 +18,13 @@ build
 *internal*
 terraform.tfvars*
 
-# GKE
-sa
-service-account.json
+# GCP
+## .sa .readonly-sa
+.*sa
+## google-github-actions/auth@v1
+gha-creds-*.json
 
-# k8s
+# k8s template output
 bucket-api.yaml
 pubsub-api.yaml
 
