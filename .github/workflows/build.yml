@@ -7,8 +7,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 env:
-  GOOGLE_CLOUD_PROJECT: ${{ secrets.GOOGLE_CLOUD_PROJECT }}
-  SA: ${{ secrets.SA }}
+  GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
 
 jobs:
   build-docker-bucket-api:

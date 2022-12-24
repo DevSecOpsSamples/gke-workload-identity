@@ -33,7 +33,7 @@ def bucket():
     if bucket_name == None:
         for k, v in os.environ.items():
             print(f'{k}={v}')
-        raise ValueError('Invalid BUCKET_NAME enrironment variable')
+        raise ValueError('Invalid GCS_BUCKET_NAME enrironment variable')
     return write_read(bucket_name, 'put-test.txt')
 
 def write_read(bucket_name, blob_name):
