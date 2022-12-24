@@ -11,11 +11,11 @@ class PubSubAPITestCase(unittest.TestCase):
         response = main.app.test_client().get("/ping")
         self.assertEqual(response.status_code, 200, 'response : %s' % response.data)
 
+    @mock.patch.dict(os.environ, {}, clear=True)
     def test_bucket_invalid_bucket_name(self):
         with self.assertRaises(ValueError):
-            main.app.test_client().get("/bucket")
+            main.bucket()
 
-    @mock.patch.dict(os.environ, {"GCS_BUCKET_NAME": "PROJECT-ID-bucket-api"}, clear=True) 
-    def test_bucket_invalid_bucket_name(self):
+    def test_bucket(self):
         response = main.app.test_client().get("/bucket")
-        self.assertEqual(response.status_code, 500, 'response : %s' % response.data)
+        self.assertEqual(response.status_code, 200, 'response : %s' % response.data)
