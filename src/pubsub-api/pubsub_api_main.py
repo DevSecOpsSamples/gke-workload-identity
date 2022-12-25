@@ -31,8 +31,8 @@ def ping():
 
 @app.route("/bucket")
 def bucket():
-    bucket_name = os.getenv('GCS_BUCKET_NAME')
-    if bucket_name == None:
+    bucket_name = os.getenv('GCS_BUCKET_NAME', '')
+    if bucket_name == '':
         for k, v in os.environ.items():
             print(f'{k}={v}')
         raise ValueError('Invalid BUCKET_NAME enrironment variable')

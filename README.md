@@ -1,7 +1,7 @@
 # GKE Workload Identity
 
 [![Build](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
 
 ## Overview
 
@@ -57,8 +57,8 @@ If you use the Terraform, you can create all resources Terraform at a time. Plea
 ### Set environment variables
 
 ```bash
-# replace with your project
-PROJECT_ID="sample-project"
+# echo "export PROJECT_ID=<your-project-id>" >> ~/.bashrc
+PROJECT_ID="<your-project-id>"
 COMPUTE_ZONE="us-central1"
 SERVICE_ACCOUNT="bucket-api-sa"
 PUBSUB_SERVICE_ACCOUNT="pubsub-api-sa"
@@ -84,11 +84,11 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 
 ## Step1: Create a GKE cluster
 
-Create an Autopilot GKE cluster. It may take around 9 minutes.
+Create an Autopilot GKE cluster. Autopilot clusters must be regional clusters and it may take around 9 minutes.
 
 ```bash
-CLUSTER_ZONE="us-central1"
-gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_ZONE} --project ${PROJECT_ID}
+CLUSTER_REGION="us-central1" 
+gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
 ```
 
 ```bash
@@ -175,7 +175,7 @@ Refer to the https://cloud.google.com/storage/docs/access-control/iam-roles page
 
 Use `serviceAccountName` for Pods:
 
-[bucket-api-template.yaml](bucket-api/bucket-api-template.yaml):
+[src/bucket-api/bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml):
 
 ```yaml
 apiVersion: apps/v1
@@ -207,6 +207,8 @@ spec:
 4.1. Build and push to GCR:
 
 ```bash
+cd src/bucket-api
+
 docker build -t bucket-api . --platform linux/amd64
 docker tag bucket-api:latest gcr.io/${PROJECT_ID}/bucket-api:latest
 
@@ -233,15 +235,14 @@ kubectl logs -l app=bucket-api -n bucket-api-ns
 
 ```bash
 LB_IP_ADDRESS=$(gcloud compute forwarding-rules list | grep bucket-api | awk '{ print $2 }' | head -n 1)
-echo "http://${LB_IP_ADDRESS}/" && curl http://${LB_IP_ADDRESS}/
-echo "http://${LB_IP_ADDRESS}/bucket" && curl http://${LB_IP_ADDRESS}/bucket
+echo "http://${LB_IP_ADDRESS}/" 
+curl http://${LB_IP_ADDRESS}/
+curl http://${LB_IP_ADDRESS}/bucket
 ```
 
 ```json
-http://34.149.214.247/
 {"host":"34.149.214.247","message":"bucket-api","method":"GET","url":"http://34.149.214.247/"}
 
-http://34.149.214.247/bucket
 {"blob_name":"put-test.txt","bucket_name":"bucket-api","response":"read/write test, bucket: bucket-api"}
 ```
 
@@ -403,26 +404,43 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 `/bucket` API does not work because permission granted to pub/pub service only.
 
+## Unittest
+
+[src/README.md](src/README.md):
+
+```bash
+PROJECT_ID="<your-project-id>"
+pytest
+```
+
 ## Structure
 
 ```bash
 ├── build.gradle
-├── bucket-api
-│   ├── Dockerfile
-│   ├── app.py
-│   ├── bucket-api-template.yaml
-│   ├── deploy.sh
-│   └── requirements.txt
-└── pubsub-api
-    ├── Dockerfile
-    ├── app.py
-    ├── deploy.sh
-    ├── pubsub-api-template.yaml
-    └── requirements.txt
+├── pytest.ini
+├── requirements.txt
+├── src
+│   ├── all-commands.sh
+│   ├── bucket-api
+│   │   ├── Dockerfile
+│   │   ├── bucket-api-template.yaml
+│   │   ├── deploy.sh
+│   │   ├── main.py
+│   │   ├── requirements.txt
+│   │   └── tests
+│   │       └── test_bucket_api.py
+│   ├── pubsub-api
+│   │   ├── Dockerfile
+│   │   ├── deploy.sh
+│   │   ├── pubsub-api-template.yaml
+│   │   ├── pubsub_api_main.py
+│   │   ├── requirements.txt
+│   │   └── test_pubsub_api.py
+│   └── terraform
 ```
   
-- [bucket-api-template.yaml](bucket-api/bucket-api-template.yaml)
-- [pubsub-api-template.yaml](pubsub-api/pubsub-api-template.yaml)
+- [bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml)
+- [pubsub-api-template.yaml](src/pubsub-api/pubsub-api-template.yaml)
 
 ## Cleanup
 
