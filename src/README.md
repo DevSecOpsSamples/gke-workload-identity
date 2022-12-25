@@ -27,10 +27,10 @@
 │   │   └── test_pubsub_api.py
 ```
 
-ROOT/pytest.ini
+[src/pytest.ini](../pytest.ini)
 
-`GOOGLE_APPLICATION_CREDENTIALS` and `GCS_BUCKET_NAME` environment variables are used with default('D:') option in pytest.
-So if you want to test in src/bucket-api or src/pubsub-api, `.sa` file should be created in each foler.
+`GOOGLE_APPLICATION_CREDENTIALS`, `GCS_BUCKET_NAME`, and `GOOGLE_CLOUD_PROJECT` environment variables are used with default('D:') option in pytest.
+So if you want to test in src/bucket-api or src/pubsub-api path, `.sa` file should be created in each foler.
 
 ```ini
 [pytest]
@@ -44,4 +44,5 @@ junit_family=legacy
 env =
     D:GOOGLE_APPLICATION_CREDENTIALS=.sa
     D:GCS_BUCKET_NAME={PROJECT_ID}-bucket-api
+    D:GOOGLE_CLOUD_PROJECT={PROJECT_ID}
 ```
