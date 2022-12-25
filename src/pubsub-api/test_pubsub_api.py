@@ -36,10 +36,9 @@ class PubSubAPITestCase(unittest.TestCase):
         response = main.app.test_client().get("/bucket")
         self.assertEqual(response.status_code, 200, 'response : %s' % response.data)
 
-    def test_pub(self):
+    def test_pubsub(self):
         response = main.app.test_client().get("/pub")
         self.assertEqual(response.status_code, 200)
 
-    def test_sub(self):
         response = main.app.test_client().get("/sub")
         self.assertEqual(response.status_code, 200)
