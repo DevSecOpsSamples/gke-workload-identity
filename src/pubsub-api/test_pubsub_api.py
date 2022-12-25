@@ -7,9 +7,13 @@ import pubsub_api_main as main
 
 class PubSubAPITestCase(unittest.TestCase):
 
+    def test_root(self):
+        response = main.app.test_client().get("/")
+        self.assertEqual(response.status_code, 200)
+
     def test_ping(self):
         response = main.app.test_client().get("/ping")
-        self.assertEqual(response.status_code, 200, 'response : %s' % response.data)
+        self.assertEqual(response.status_code, 200)
 
     @mock.patch.dict(os.environ, {}, clear=True)
     def test_bucket_invalid_bucket_name(self):
