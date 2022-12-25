@@ -74,10 +74,15 @@ jobs:
           echo "SA_FILE: ${{ env.SA_FILE }}
           echo "cp $SA_FILE .sa"
           cat .sa
-          # echo "GOOGLE_APPLICATION_CREDENTIALS=.sa" >> $GITHUB_ENV
-          echo "GOOGLE_APPLICATION_CREDENTIALS=${{ env.SA_FILE }}" >> $GITHUB_ENV
-          echo "GCS_BUCKET_NAME=${{ secrets.PROJECT_ID }}-bucket-api >> $GITHUB_ENV
+          # # echo "GOOGLE_APPLICATION_CREDENTIALS=.sa" >> $GITHUB_ENV
+          # echo "GOOGLE_APPLICATION_CREDENTIALS=${{ env.SA_FILE }}" >> $GITHUB_ENV
+          # echo "GCS_BUCKET_NAME=${{ secrets.PROJECT_ID }}-bucket-api >> $GITHUB_ENV
           pytest
+      - name: pytest
+        run: pytest
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: .sa
+          GCS_BUCKET_NAME: ${{ secrets.PROJECT_ID }}-bucket-api
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
