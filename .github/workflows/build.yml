@@ -6,8 +6,6 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
-env:
-  GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
 
 jobs:
   build-docker-bucket-api:
@@ -42,6 +40,8 @@ jobs:
 
   sonarqube:
     runs-on: ubuntu-latest
+    env:
+      GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
     steps:
       - uses: hmarr/debug-action@v2
         if: always()
@@ -67,11 +67,6 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.SA }}'
-      # - name: pytest with credential path
-      #   run: |
-      #     echo ${{ secrets.SA }} > .sa
-      #     cat .sa
-      #     pytest
       - name: pytest
         run: env && pytest
       - name: Cache SonarCloud packages
