@@ -73,10 +73,10 @@ jobs:
           cat .sa
           pytest
       - name: pytest
-        run: pytest
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ".sa"
-          GCS_BUCKET_NAME: ${{ secrets.PROJECT_ID }}-bucket-api
+        run: env && pytest
+        # env:
+        #   GOOGLE_APPLICATION_CREDENTIALS: ".sa"
+        #   GCS_BUCKET_NAME: ${{ secrets.PROJECT_ID }}-bucket-api
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
