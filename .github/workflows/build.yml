@@ -67,7 +67,7 @@ jobs:
           credentials_json: '${{ secrets.SA }}'
       - name: pytest with credential path
         run: |
-          echo "SA_FILE=$(ls gha-creds-*.json)"
+          echo "SA_FILE=$(ls gha-creds-*.json)" >> $GITHUB_ENV
           echo "cp $SA_FILE .sa"
           cat .sa
           echo "GOOGLE_APPLICATION_CREDENTIALS=.sa" >> $GITHUB_ENV
