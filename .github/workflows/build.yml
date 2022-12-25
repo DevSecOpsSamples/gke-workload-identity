@@ -71,6 +71,7 @@ jobs:
           # find . -name "gha-creds-*.json" -exec cp '{}' .sa__
           # find . -name "gha-creds-*.json" | xargs cp -t .sa__
           ls -alh
+          echo "SA_FILE: ${{ env.SA_FILE }}
           echo "cp $SA_FILE .sa"
           cat .sa
           # echo "GOOGLE_APPLICATION_CREDENTIALS=.sa" >> $GITHUB_ENV
