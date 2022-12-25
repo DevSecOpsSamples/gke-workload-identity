@@ -6,8 +6,6 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
-env:
-  GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
 
 jobs:
   build-docker-bucket-api:
@@ -42,6 +40,8 @@ jobs:
 
   sonarqube:
     runs-on: ubuntu-latest
+    env:
+      GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -65,10 +65,8 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.SA }}'
-      - name: pytest with credential path
-        run: |
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$(ls gha-creds-*.json)" >> $GITHUB_ENV
-          pytest
+      - name: pytest
+        run: pytest
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -85,6 +83,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
         run: ./gradlew build sonarqube --info
           

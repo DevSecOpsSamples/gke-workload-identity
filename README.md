@@ -1,7 +1,7 @@
 # GKE Workload Identity
 
 [![Build](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/gke-workload-identity/actions/workflows/build.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_gke-workload-identity&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_gke-workload-identity)
 
 ## Overview
 
@@ -404,26 +404,43 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 `/bucket` API does not work because permission granted to pub/pub service only.
 
+## Unittest
+
+[src/README.md](src/README.md):
+
+```bash
+PROJECT_ID="<your-project-id>"
+pytest
+```
+
 ## Structure
 
 ```bash
 ├── build.gradle
-├── bucket-api
-│   ├── Dockerfile
-│   ├── app.py
-│   ├── bucket-api-template.yaml
-│   ├── deploy.sh
-│   └── requirements.txt
-└── pubsub-api
-    ├── Dockerfile
-    ├── app.py
-    ├── deploy.sh
-    ├── pubsub-api-template.yaml
-    └── requirements.txt
+├── pytest.ini
+├── requirements.txt
+├── src
+│   ├── all-commands.sh
+│   ├── bucket-api
+│   │   ├── Dockerfile
+│   │   ├── bucket-api-template.yaml
+│   │   ├── deploy.sh
+│   │   ├── main.py
+│   │   ├── requirements.txt
+│   │   └── tests
+│   │       └── test_bucket_api.py
+│   ├── pubsub-api
+│   │   ├── Dockerfile
+│   │   ├── deploy.sh
+│   │   ├── pubsub-api-template.yaml
+│   │   ├── pubsub_api_main.py
+│   │   ├── requirements.txt
+│   │   └── test_pubsub_api.py
+│   └── terraform
 ```
   
-- [bucket-api-template.yaml](bucket-api/bucket-api-template.yaml)
-- [pubsub-api-template.yaml](pubsub-api/pubsub-api-template.yaml)
+- [bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml)
+- [pubsub-api-template.yaml](src/pubsub-api/pubsub-api-template.yaml)
 
 ## Cleanup
 
