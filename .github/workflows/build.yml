@@ -67,17 +67,7 @@ jobs:
           credentials_json: '${{ secrets.SA }}'
       - name: pytest with credential path
         run: |
-          export SA_FILE_PATH=$(ls gha-creds-*.json)"
-          echo "SA_FILE=${SA_FILE_PATH}" >> $GITHUB_ENV
-          # find . -name "gha-creds-*.json" -exec cp '{}' .sa__
-          # find . -name "gha-creds-*.json" | xargs cp -t .sa__
-          ls -alh
-          echo "SA_FILE: ${{ env.SA_FILE }}
-          echo "cp $SA_FILE .sa"
-          cat .sa
-          # # echo "GOOGLE_APPLICATION_CREDENTIALS=.sa" >> $GITHUB_ENV
-          # echo "GOOGLE_APPLICATION_CREDENTIALS=${{ env.SA_FILE }}" >> $GITHUB_ENV
-          # echo "GCS_BUCKET_NAME=${{ secrets.PROJECT_ID }}-bucket-api >> $GITHUB_ENV
+          echo ${{ secrets.SA }} > .sa
           pytest
       - name: pytest
         run: pytest
