@@ -27,6 +27,14 @@
 │   │   └── test_pubsub_api.py
 ```
 
+```bash
+PROJECT_ID="<your-project-id>"
+pytest
+# or gradle test
+
+gladle clean
+```
+
 [src/pytest.ini](../pytest.ini)
 
 `GOOGLE_APPLICATION_CREDENTIALS`, `GCS_BUCKET_NAME`, and `GOOGLE_CLOUD_PROJECT` environment variables are used with default('D:') option in pytest.
