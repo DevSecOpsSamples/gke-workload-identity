@@ -1,6 +1,7 @@
 build
 .gradle
 .vscode
+.idea
 
 *.log
 *.jar

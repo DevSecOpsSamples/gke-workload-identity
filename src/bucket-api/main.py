@@ -1,4 +1,5 @@
 import os
+import logging
 from flask import Flask
 from flask import request
 from flask import json
@@ -11,13 +12,16 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 csrf.init_app(app)
 
+
 @app.route("/")
 def ping_root():
     return ping()
 
+
 @app.route("/<string:path1>")
 def ping_path1(path1):
     return ping()
+
 
 def ping():
     return {
@@ -27,14 +31,23 @@ def ping():
         "message": "bucket-api"
     }
 
+
+def get_bucket_name():
+    return os.getenv('GCS_BUCKET_NAME', '')
+
+
 @app.route("/bucket")
 def bucket():
-    bucket_name = os.getenv('GCS_BUCKET_NAME', '')
+    bucket_name = get_bucket_name()
+    logging.info('GCS_BUCKET_NAME: {}, GOOGLE_APPLICATION_CREDENTIALS: {}'.format(bucket_name, os.getenv(
+        'GOOGLE_APPLICATION_CREDENTIALS', '')))
     if bucket_name == '':
         for k, v in os.environ.items():
             print(f'{k}={v}')
         raise ValueError('Invalid GCS_BUCKET_NAME enrironment variable')
+
     return write_read(bucket_name, 'put-test.txt')
+
 
 def write_read(bucket_name, blob_name):
     response = ""
@@ -53,18 +66,6 @@ def write_read(bucket_name, blob_name):
         "response": response
     }
 
-@app.route("/buckets")
-def buckets():
-    response = ""
-    storage_client = storage.Client()
-    buckets = storage_client.list_buckets()
-    for bucket in buckets:
-        response += ' '+ bucket.name
-    
-    return {
-        "response": response
-    }
-
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     response = e.get_response()
@@ -72,10 +73,11 @@ def handle_exception(e):
         "code": e.code,
         "name": e.name,
         "description": e.description,
-        
+
     })
     response.content_type = "application/json"
     return response
+
 
 if __name__ == '__main__':
     app.debug = True
