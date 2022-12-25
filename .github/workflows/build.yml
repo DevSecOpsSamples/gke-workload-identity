@@ -69,6 +69,7 @@ jobs:
         run: |
           echo "SA_FILE=$(ls gha-creds-*.json)" >> $GITHUB_ENV
           echo "cp $SA_FILE .sa"
+          cat .sa
           # echo "GOOGLE_APPLICATION_CREDENTIALS=$(ls gha-creds-*.json)" >> $GITHUB_ENV
           pytest
       - name: Cache SonarCloud packages
