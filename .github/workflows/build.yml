@@ -43,8 +43,6 @@ jobs:
     env:
       GCS_BUCKET_NAME: "${{ secrets.GOOGLE_CLOUD_PROJECT }}-bucket-api"
     steps:
-      - uses: hmarr/debug-action@v2
-        if: always()
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
