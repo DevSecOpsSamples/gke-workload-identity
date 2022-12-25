@@ -67,7 +67,8 @@ jobs:
           credentials_json: '${{ secrets.SA }}'
       - name: pytest with credential path
         run: |
-          echo "SA_FILE=$(ls gha-creds-*.json)" >> $GITHUB_ENV
+          export SA_FILE_PATH=$(ls gha-creds-*.json)"
+          echo "SA_FILE=${SA_FILE_PATH}" >> $GITHUB_ENV
           # find . -name "gha-creds-*.json" -exec cp '{}' .sa__
           # find . -name "gha-creds-*.json" | xargs cp -t .sa__
           ls -alh
