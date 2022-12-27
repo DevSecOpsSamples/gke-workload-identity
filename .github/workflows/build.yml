@@ -41,7 +41,7 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.SA }}'
-    - run: terraform plan -out=${{ matrix.path }}/plan.txt
+    - run: terraform plan  -no-color -out=${{ matrix.path }}/plan.txt
       working-directory: ${{ matrix.path }}
 
   sonarqube:
