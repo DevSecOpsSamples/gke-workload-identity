@@ -37,6 +37,8 @@ jobs:
       working-directory: ${{ matrix.path }}
     - run: terraform validate -no-color
       working-directory: ${{ matrix.path }}
+    - run: terraform plan
+      working-directory: ${{ matrix.path }}
 
   sonarqube:
     runs-on: ubuntu-latest
