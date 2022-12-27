@@ -37,6 +37,10 @@ jobs:
       working-directory: ${{ matrix.path }}
     - run: terraform validate -no-color
       working-directory: ${{ matrix.path }}
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.SA }}'
     - run: terraform plan
       working-directory: ${{ matrix.path }}
 
