@@ -61,12 +61,10 @@ jobs:
         with:
           python-version: 3.9
           cache: 'pip'
-      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install --upgrade google-cloud-storage
-          pip install --upgrade google-cloud-pubsub
+          pip install --upgrade google-cloud-storage google-cloud-pubsub
       - name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
