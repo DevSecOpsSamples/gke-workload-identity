@@ -27,14 +27,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: hashicorp/setup-terraform@v2
+    - name: HashiCorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v2.0.3
     - run: terraform fmt -check
       continue-on-error: true
       working-directory: ${{ matrix.path }}
     - run: terraform init
       working-directory: ${{ matrix.path }}
+      id: init
     - run: terraform validate -no-color
       working-directory: ${{ matrix.path }}
+      id: validate
     - name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
       with:
