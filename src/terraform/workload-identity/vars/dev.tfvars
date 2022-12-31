@@ -1,4 +1,4 @@
-project_id = "<dev-stgage-project-id>"
+project_id = "<dev-stage-project-id>"
 region     = "us-central1"
 stage      = "dev"
 backend_bucket = "terraform-state"
