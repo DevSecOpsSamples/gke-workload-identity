@@ -42,6 +42,12 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.SA }}'
+    - name: Find and Replace
+      uses: jacobtomlinson/gha-find-replace@v2
+      with:
+        find: "<dev-stgage-project-id>"
+        replace: ${{ secrets.PROJECT_ID }}
+        regex: false
     - name: Terraform Plan
       id: plan
       run: terraform plan -var-file=vars/dev.tfvars -no-color
