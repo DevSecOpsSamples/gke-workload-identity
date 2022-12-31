@@ -42,10 +42,12 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.SA }}'
+# terraform plan -var-file=build/githubaction.tfvars
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color
+      run: terraform plan -var-file=vars/dev.tfvars -no-color
       continue-on-error: true
+      working-directory: ${{ matrix.path }}
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
