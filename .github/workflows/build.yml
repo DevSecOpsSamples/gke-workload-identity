@@ -38,10 +38,10 @@ jobs:
     - run: terraform validate -no-color
       working-directory: ${{ matrix.path }}
       id: validate
-    - name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: '${{ secrets.SA }}'
+    # - name: 'Authenticate to Google Cloud'
+    #   uses: 'google-github-actions/auth@v1'
+    #   with:
+    #     credentials_json: '${{ secrets.SA }}'
     - name: Find and Replace
       uses: jacobtomlinson/gha-find-replace@v2
       with:
