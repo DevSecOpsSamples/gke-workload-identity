@@ -48,7 +48,6 @@ jobs:
       run: terraform plan -var-file=vars/dev.tfvars -no-color
       continue-on-error: true
       working-directory: ${{ matrix.path }}
-
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
