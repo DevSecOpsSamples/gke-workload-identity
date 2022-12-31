@@ -42,7 +42,6 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.SA }}'
-# terraform plan -var-file=build/githubaction.tfvars
     - name: Terraform Plan
       id: plan
       run: terraform plan -var-file=vars/dev.tfvars -no-color
@@ -72,6 +71,10 @@ jobs:
 
           \`\`\`\n
           ${process.env.PLAN}
+          \`\`\`
+
+          \`\`\`\n
+          ${{ steps.plan.outputs.stdout }}
           \`\`\`
 
           </details>`;
