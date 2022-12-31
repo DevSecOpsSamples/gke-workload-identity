@@ -45,35 +45,31 @@ jobs:
     - name: Terraform Plan
       id: plan
       run: terraform plan -var-file=vars/dev.tfvars -no-color
-      # continue-on-error: true
       working-directory: ${{ matrix.path }}
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `#### Working Directory ${{ matrix.path }}
+          const output = `#### Working Directory: ${{ matrix.path }}
+
           #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
           
           #### Terraform Initialization \`${{ steps.init.outcome }}\`
           
           #### Terraform Validation \`${{ steps.validate.outcome }}\`
           <details><summary>Validation Output</summary>
-
           \`\`\`\n
           ${{ steps.validate.outputs.stdout }}
           \`\`\`
-
           </details>
 
           #### Terraform Plan \`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
-
           \`\`\`\n
           ${{ steps.plan.outputs.stdout }}
           \`\`\`
-
           </details>`;
 
           github.rest.issues.createComment({
