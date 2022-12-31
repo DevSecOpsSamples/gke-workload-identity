@@ -47,9 +47,11 @@ jobs:
       with:
         find: "<dev-stgage-project-id>"
         replace: ${{ secrets.PROJECT_ID }}
+        include: "src/terraform/**"
         regex: false
     - name: Terraform Plan
       id: plan
+      if: matrix.path == 'src/terraform/cluster'
       run: terraform plan -var-file=vars/dev.tfvars -no-color
       working-directory: ${{ matrix.path }}
     - uses: actions/github-script@v6
