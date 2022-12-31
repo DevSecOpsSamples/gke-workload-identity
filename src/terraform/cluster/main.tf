@@ -1,11 +1,11 @@
 provider "google" {
-    project     = var.project_id
-    region      = var.region
+  project = var.project_id
+  region  = var.region
 }
 
 resource "google_container_cluster" "primary" {
-  name     = "sample-cluster-${var.stage}"
-  location = var.region
+  name                     = "sample-cluster-${var.stage}"
+  location                 = var.region
   remove_default_node_pool = true
   initial_node_count       = 1
   # private_cluster_config {
@@ -19,7 +19,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_nodes" {
-  name       = "${google_container_cluster.primary.name}"
+  name       = google_container_cluster.primary.name
   location   = var.region
   cluster    = google_container_cluster.primary.name
   node_count = 3
@@ -80,7 +80,7 @@ data "terraform_remote_state" "this" {
   workspace = var.stage
 
   config = {
-    bucket =  var.backend_bucket
+    bucket = var.backend_bucket
     prefix = "gke/${google_container_cluster.primary.name}"
   }
 }
