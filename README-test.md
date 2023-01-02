@@ -1,7 +1,7 @@
 # Testing on your desktop with the IAM key
 
 ```bash
-cd bucket-api
+cd src/bucket-api
 gcloud iam service-accounts keys create --iam-account "bucket-api-sa@${PROJECT_ID}.iam.gserviceaccount.com" .sa
 ```
 
@@ -30,9 +30,9 @@ pip install --upgrade google-cloud-storage
 ```
 
 ```bash
-export GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
+GCS_BUCKET_NAME="${PROJECT_ID}-bucket-api"
+GOOGLE_APPLICATION_CREDENTIALS=".sa"
 echo "GCS_BUCKET_NAME: ${GCS_BUCKET_NAME}"
-export GOOGLE_APPLICATION_CREDENTIALS=".sa"
 cat ${GOOGLE_APPLICATION_CREDENTIALS}
 pytest
 

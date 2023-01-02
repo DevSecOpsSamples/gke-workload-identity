@@ -18,7 +18,7 @@ In this sample project, we will learn GKE security with the IAM service account 
 Learn the features below:
 
 - **Three steps for Workload Identity**
-    - Creating an IAM Service Account
+    - Creating an IAM service account and Kubernetes service account
     - IAM policy binding between IAM service account and Kubernetes service account
     - Annotate the Kubernetes service account
 - Pod specification for GKE service account and GCP load balancer
@@ -30,12 +30,12 @@ Learn the features below:
 - [Step1: Create a GKE cluster](#step1-create-a-gke-cluster)
 - [Step2: Create Kubernetes namespaces and service accounts](#step2-create-kubernetes-namespaces-and-service-accounts)
 - [Step3: IAM service account for bucket-api](#step3-iam-service-account-for-bucket-api)
-    - 3.1. Creating an IAM Service Account
+    - 3.1. Creating an IAM service account
     - 3.2. IAM policy binding between IAM service account and Kubernetes service account
     - 3.3. Annotate the Kubernetes service account
 - [Step4: Deploy bucket-api](#step4-deploy-bucket-api)
 - [Step5: IAM service account for pubsub-api](#step5-iam-service-account-for-pubsub-api)
-    - 5.1. Creating an IAM Service Account
+    - 5.1. Creating an IAM service account
     - 5.2. IAM policy binding between IAM service account and Kubernetes service account
     - 5.3. Annotate the Kubernetes service account
 - [Step6: Create a Topic/Subscription and grant a permission](#step6-create-a-topicsubscription-and-grant-a-permission)
@@ -128,7 +128,7 @@ kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 
 ## Step3: IAM service account for bucket-api
 
-3.1. Creating an IAM Service Account.
+3.1. Creating an IAM service account.
 
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
@@ -255,7 +255,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 ## Step5: IAM service account for pubsub-api
 
-5.1. Creating an IAM Service Account.
+5.1. Creating an IAM service account.
 
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
@@ -454,7 +454,7 @@ If you use the Terraform, you can create all resources Terraform at a time. Plea
 
     Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
 
-    If working fine with credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
+    If working fine with the credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
 
 ## Cleanup
 
