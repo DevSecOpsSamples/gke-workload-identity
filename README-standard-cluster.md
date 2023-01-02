@@ -1,4 +1,4 @@
-# Create a Standard mode cluster
+# Create a Standard mode cluster and enable the workload Identity
 
 It may take around 7 minutes.
 
@@ -13,7 +13,7 @@ gcloud container clusters create ${CLUSTER_NAME} \
 
 ```bash
 NAME                        LOCATION       MASTER_VERSION  MASTER_IP       MACHINE_TYPE  NODE_VERSION    NUM_NODES  STATUS
-ample-cluster-standard-dev  us-central1-a  1.24.5-gke.600  xx.xxx.xxx.xxx  e2-medium     1.24.5-gke.600  3          RUNNING
+sample-cluster-standard-dev  us-central1-a  1.24.5-gke.600  xx.xxx.xxx.xxx  e2-medium     1.24.5-gke.600  3          RUNNING
 ```
 
 **IMPORTANT**:
@@ -38,5 +38,6 @@ gcloud container node-pools update default-pool
 ```
 
 ```bash
-gcloud container clusters get-credentials ${CLUSTER_NAME} --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
+gcloud container clusters get-credentials ${CLUSTER_NAME} \
+       --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
 ```
