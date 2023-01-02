@@ -23,7 +23,7 @@ jobs:
   terraform:
     strategy:
       matrix:
-        path: [src/terraform/cluster, src/terraform/workload-identity]
+        path: [src/terraform/autopilot-cluster, src/terraform/standard-cluster, src/terraform/workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
         regex: false
     - name: Terraform Plan
       id: plan
-      if: matrix.path == 'src/terraform/cluster'
+      if: matrix.path != 'src/terraform/workload-identity'
       run: terraform plan -var-file=vars/dev.tfvars -no-color
       working-directory: ${{ matrix.path }}
     - uses: actions/github-script@v6

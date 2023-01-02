@@ -5,17 +5,45 @@ provider "google" {
 
 data "google_client_config" "provider" {}
 
+locals {
+  is_autopilot_cluster = true
+}
 data "google_container_cluster" "this" {
-  name     = "sample-cluster-${var.stage}"
+  name = local.is_autopilot_cluster ? "sample-cluster-${var.stage}" : "sample-cluster-standard-${var.stage}"
+  # var.region - is_autopilot_cluster ? "us-central1" : "us-central1-a"
   location = var.region
 }
 
+module "gke_auth" {
+  source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
+  project_id           = var.project_id
+  cluster_name         = data.google_container_cluster.this.name
+  location             = data.google_container_cluster.this.location
+  use_private_endpoint = false
+}
+
 provider "kubernetes" {
-  host  = "https://${data.google_container_cluster.this.endpoint}"
-  token = data.google_client_config.provider.access_token
-  cluster_ca_certificate = base64decode(
-    data.google_container_cluster.this.master_auth[0].cluster_ca_certificate,
-  )
+  cluster_ca_certificate = module.gke_auth.cluster_ca_certificate
+  host                   = module.gke_auth.host
+  token                  = module.gke_auth.token
+}
+
+resource "kubernetes_namespace" "bucket-api-ns" {
+  metadata {
+    name = "bucket-api-ns"
+  }
+  timeouts {
+    delete = "30m"
+  }
+}
+
+resource "kubernetes_namespace" "pubsub-api-ns" {
+  metadata {
+    name = "pubsub-api-ns"
+  }
+  timeouts {
+    delete = "30m"
+  }
 }
 
 module "bucket-api-workload-identity" {
@@ -25,7 +53,6 @@ module "bucket-api-workload-identity" {
   project_id = var.project_id
   roles      = ["roles/iam.workloadIdentityUser", "roles/storage.objectViewer", "roles/storage.admin", "roles/container.admin"]
 }
-
 module "pubsub-api-workload-identity" {
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
   name       = "pubsub-api-sa"
