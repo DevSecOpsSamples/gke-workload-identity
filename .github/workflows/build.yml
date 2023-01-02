@@ -12,15 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: cd src/bucket-api && docker build . -t bucket-api:$(date +%s)
+    - run: cd src/bucket-api && docker build . -t bucket-api:$(date +%s)
 
   build-docker-pubsub-api:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: cd src/pubsub-api && docker build . -t pubsub-api:$(date +%s)
+    - run: cd src/pubsub-api && docker build . -t pubsub-api:$(date +%s)
 
   terraform:
     strategy:
@@ -29,14 +27,70 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: hashicorp/setup-terraform@v2
+    - name: HashiCorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v2.0.3
     - run: terraform fmt -check
-      continue-on-error: true
+      id: fmt
       working-directory: ${{ matrix.path }}
     - run: terraform init
       working-directory: ${{ matrix.path }}
+      id: init
     - run: terraform validate -no-color
       working-directory: ${{ matrix.path }}
+      id: validate
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.SA }}'
+    - name: Replace project-id
+      uses: jacobtomlinson/gha-find-replace@v2
+      with:
+        find: "<dev-stage-project-id>"
+        replace: ${{ secrets.PROJECT_ID }}
+        include: "src/terraform/**"
+        regex: false
+    - name: Terraform Plan
+      id: plan
+      if: matrix.path == 'src/terraform/cluster'
+      run: terraform plan -var-file=vars/dev.tfvars -no-color
+      working-directory: ${{ matrix.path }}
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Working Directory: ${{ matrix.path }}
+
+          #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+          
+          #### Terraform Initialization \`${{ steps.init.outcome }}\`
+          
+          #### Terraform Validation \`${{ steps.validate.outcome }}\`
+
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+
+          #### Terraform Plan \`${{ steps.plan.outcome }}\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`\n
+          ${{ steps.plan.outputs.stdout }}
+          \`\`\`
+
+          </details>`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          });
 
   sonarqube:
     runs-on: ubuntu-latest
@@ -55,29 +109,33 @@ jobs:
         with:
           python-version: 3.9
           cache: 'pip'
-      - name: Install dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install --upgrade google-cloud-storage
-          pip install --upgrade google-cloud-pubsub
+          pip install --upgrade google-cloud-storage google-cloud-pubsub
       - name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.SA }}'
-      - name: pytest
-        run: pytest
+      - run: pytest
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        if: always()
+        with:
+          junit_files: "build/test-result.xml"
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Gradle packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Build and analyze
         env:

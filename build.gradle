@@ -5,8 +5,6 @@ plugins {
 
 task build(overwrite: true, dependsOn:['test'])
 
-task all(dependsOn:['clean', 'test', 'sonarqube'])
-
 task test(type:Exec) {
     commandLine 'pytest'
 }
@@ -32,9 +30,10 @@ sonarqube {
 }
 
 clean.doFirst {
-    delete "${rootDir}/bucket-api/bucket-api.yaml"
-    delete "${rootDir}/pubsub-api/pubsub-api.yaml"
-    delete "${rootDir}/.coverage"
+    delete "${rootDir}/src/bucket-api/bucket-api.yaml"
+    delete "${rootDir}/src/pubsub-api/pubsub-api.yaml"
     delete "${rootDir}/.pytest_cache"
+    delete fileTree(dir: './' , include: '**/.coverage')
+    delete fileTree(dir: 'src' , include: '**/*.pyc')    
     delete fileTree(dir: 'src' , include: '**/__pycache__')
 }

@@ -13,13 +13,16 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 csrf.init_app(app)
 
+
 @app.route("/")
 def ping_root():
     return ping()
 
+
 @app.route("/<string:path1>")
 def ping_path1(path1):
     return ping()
+
 
 def ping():
     return {
@@ -29,6 +32,7 @@ def ping():
         "message": "pubsub-api"
     }
 
+
 @app.route("/bucket")
 def bucket():
     bucket_name = os.getenv('GCS_BUCKET_NAME', '')
@@ -37,6 +41,7 @@ def bucket():
             print(f'{k}={v}')
         raise ValueError('Invalid BUCKET_NAME enrironment variable')
     return write_read(bucket_name, 'put-test.txt')
+
 
 def write_read(bucket_name, blob_name):
     response = ""
@@ -55,6 +60,7 @@ def write_read(bucket_name, blob_name):
         "response": response
     }
 
+
 @app.route("/pub")
 def pub():
     publisher = pubsub_v1.PublisherClient()
@@ -67,6 +73,7 @@ def pub():
         "topic_name": topic_name,
         "result": future.result()
     }
+
 
 @app.route("/sub")
 def sub():
@@ -100,6 +107,7 @@ def sub():
         "subscription_path": subscription_path,
         "acknowledged": len(response.received_messages)
     }
+
 
 @app.errorhandler(HTTPException)
 def handle_exception(e):

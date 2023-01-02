@@ -66,6 +66,7 @@ def write_read(bucket_name, blob_name):
         "response": response
     }
 
+
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     response = e.get_response()

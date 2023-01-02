@@ -5,16 +5,16 @@ provider "google" {
 
 data "google_client_config" "provider" {}
 
-data "google_container_cluster" "primary" {
+data "google_container_cluster" "this" {
   name     = "sample-cluster-${var.stage}"
   location = var.region
 }
 
 provider "kubernetes" {
-  host  = "https://${data.google_container_cluster.primary.endpoint}"
+  host  = "https://${data.google_container_cluster.this.endpoint}"
   token = data.google_client_config.provider.access_token
   cluster_ca_certificate = base64decode(
-    data.google_container_cluster.primary.master_auth[0].cluster_ca_certificate,
+    data.google_container_cluster.this.master_auth[0].cluster_ca_certificate,
   )
 }
 
@@ -39,6 +39,6 @@ data "terraform_remote_state" "this" {
 
   config = {
     bucket = var.backend_bucket
-    prefix = "gke/${data.google_container_cluster.primary.name}-workload-identity"
+    prefix = "gke/${data.google_container_cluster.this.name}-workload-identity"
   }
 }
