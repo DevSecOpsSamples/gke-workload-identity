@@ -93,7 +93,8 @@ Create an Autopilot GKE cluster. Autopilot clusters must be regional clusters an
 
 ```bash
 CLUSTER_REGION="us-central1" 
-gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
+gcloud container clusters create-auto sample-cluster-dev \
+       --region=${CLUSTER_REGION} --project ${PROJECT_ID}
 ```
 
 ```bash
@@ -102,7 +103,8 @@ sample-cluster-dev  us-central1  1.24.5-gke.600  xxx.xxx.xxx.xxx  e2-medium     
 ```
 
 ```bash
-gcloud container clusters get-credentials sample-cluster-dev --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
+gcloud container clusters get-credentials sample-cluster-dev \
+       --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
 ```
 
 If you want to use a Standard mode cluster instead of Autopilot GKE cluster. Refer to the [README-standard-cluster.md](README-standard-cluster.md).
