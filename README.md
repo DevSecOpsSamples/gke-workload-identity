@@ -17,8 +17,10 @@ In this sample project, we will learn GKE security with the IAM service account 
 
 Learn the features below:
 
-- IAM service account and role/permission
-- Workload Identity
+- Three steps for Workload Identity
+    - Creating an IAM Service Account
+    - IAM policy binding between IAM service account and Kubernetes service account
+    - Annotate the Kubernetes service account
 - Pod specification for GKE service account and GCP load balancer
 - Create resources with Terraform
 
@@ -32,6 +34,9 @@ Learn the features below:
     - 3.3. Annotate the Kubernetes service account
 - [Step4: Deploy bucket-api](#step4-deploy-bucket-api)
 - [Step5: IAM service account for pubsub-api](#step5-iam-service-account-for-pubsub-api)
+    - 5.1. Creating an IAM Service Account
+    - 5.2. IAM policy binding between IAM service account and Kubernetes service account
+    - 5.3. Annotate the Kubernetes service account
 - [Step6: Create a Topic/Subscription and grant a permission](#step6-create-a-topicsubscription-and-grant-a-permission)
     - 6.1. Create a Topic and Subscription
     - 6.2. Grant permission to IAM service account to publish to Topic
