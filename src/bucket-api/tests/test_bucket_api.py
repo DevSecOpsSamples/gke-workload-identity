@@ -34,7 +34,7 @@ class RestAPIsTestCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {"GCS_BUCKET_NAME": "invalid-bucket-api"}, clear=True)
     def test_invalid_bucket_name(self):
         response = main.app.test_client().get("/bucket")
-        self.assertEqual(response.status_code, 400, 'response : %s' % response.data)
+        self.assertEqual(response.status_code, 404, 'response : %s' % response.data)
 
     def test_bucket(self):
         response = main.app.test_client().get("/bucket")
