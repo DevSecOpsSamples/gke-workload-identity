@@ -25,22 +25,21 @@ Learn the features below:
 ## Table of Contents
 
 - [Step1: Create a GKE cluster](#step1-create-a-gke-cluster)
-- Step2: Create Kubernetes namespace and service account
-- Step3: IAM service account for bucket-api
+- [Step2: Create Kubernetes namespace and service account](#step2-create-kubernetes-namespace-and-service-account)
+- [Step3: IAM service account for bucket-api](#step3-iam-service-account-for-bucket-api)
     - 3.1. Creating an IAM Service Account
     - 3.2. IAM policy binding between IAM service account and Kubernetes service account
     - 3.3. Annotate the Kubernetes service account
-- Step4: GCS bucket creation and grant a permission
-- Step5: Deploy bucket-api
-- Step6: IAM service account for pubsub-api
-    - 6.1. Creating an IAM Service Account
-    - 6.2. IAM policy binding between IAM service account and Kubernetes service account
-    - 6.3. Annotate the Kubernetes service account
-- Step7: Create a Topic/Subscription and grant a permission
-    - 7.1. Create a Topic and Subscription.
-    - 7.2. Grant permission to IAM service account to publish to Topic
-    - 7.3. Grant permission to IAM service account for subscription
-- Step8: Deploy pubsub-api
+- [Step4: Deploy bucket-api](#step4-deploy-bucket-api)
+- [Step5: IAM service account for pubsub-api](#step5-iam-service-account-for-pubsub-api)
+- [Step6: Create a Topic/Subscription and grant a permission](#step6-create-a-topicsubscription-and-grant-a-permission)
+    - 6.1. Create a Topic and Subscription
+    - 6.2. Grant permission to IAM service account to publish to Topic
+    - 6.3. Grant permission to IAM service account for subscription
+- [Step7: Deploy pubsub-api](#step7-deploy-pubsub-api)
+- [Unittest](#unittest)
+- [Structure](#structure)
+- [Cleanup](#cleanup)
 
 If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [terraform/README.md](terraform/README.md) page.
 
