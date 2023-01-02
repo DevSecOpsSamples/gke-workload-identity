@@ -156,6 +156,18 @@ kubectl describe service -n bucket-api-ns
 kubectl describe service -n pubsub-api-ns
 ```
 
+## Troubleshooting
+
+```bash
+│ Error: projects/<your-project-id>/locations/us-central1-a/clusters/sample-cluster-dev not found
+│ 
+│   with data.google_container_cluster.this,
+│   on main.tf line 11, in data "google_container_cluster" "this":
+│   11: data "google_container_cluster" "this" {
+```
+
+> Check your region variable
+
 ### Cleanup
 
 ```bash
@@ -169,6 +181,7 @@ terraform destroy
 ### References
 
 - [container_cluster](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster)
+- [Terraform Google Provider 4.0.0 Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/guides/version_4_upgrade)
 - [Kubernetes Provider](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)
 - [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace)
 - [workload-identity](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/workload-identity)

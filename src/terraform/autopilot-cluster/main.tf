@@ -4,7 +4,7 @@ provider "google" {
 }
 
 resource "google_container_cluster" "this" {
-  name               = "sample-cluster-${var.stage}"
+  name               = format("sample-cluster-%s", var.stage)
   location           = var.region
   enable_autopilot   = true
   initial_node_count = 1
@@ -18,6 +18,6 @@ data "terraform_remote_state" "this" {
 
   config = {
     bucket = var.backend_bucket
-    prefix = "gke/${google_container_cluster.this.name}"
+    prefix = format("gke/%s", google_container_cluster.this.name)
   }
 }
