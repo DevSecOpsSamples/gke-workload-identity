@@ -49,7 +49,8 @@ terraform workspace list
 ```bash
 terraform init
 
-terraform plan
+terraform plan -var-file=vars/dev.tfvars
+#terraform plan
 
 terraform apply
 ```

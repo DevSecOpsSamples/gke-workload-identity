@@ -1,11 +1,11 @@
 provider "google" {
-    project     = var.project_id
-    region      = var.region
+  project = var.project_id
+  region  = var.region
 }
 
-resource "google_container_cluster" "primary" {
-  name     = "sample-cluster-${var.stage}"
-  location = var.region
+resource "google_container_cluster" "this" {
+  name                     = "sample-cluster-${var.stage}"
+  location                 = var.region
   remove_default_node_pool = true
   initial_node_count       = 1
   # private_cluster_config {
@@ -18,10 +18,10 @@ resource "google_container_cluster" "primary" {
   # }
 }
 
-resource "google_container_node_pool" "primary_nodes" {
-  name       = "${google_container_cluster.primary.name}"
+resource "google_container_node_pool" "nodes" {
+  name       = google_container_cluster.this.name
   location   = var.region
-  cluster    = google_container_cluster.primary.name
+  cluster    = google_container_cluster.this.name
   node_count = 3
 
   node_config {
@@ -34,7 +34,7 @@ resource "google_container_node_pool" "primary_nodes" {
     }
     preemptible  = true
     machine_type = "n1-standard-1"
-    tags         = ["gke-node", google_container_cluster.primary.name]
+    tags         = ["gke-node", google_container_cluster.this.name]
     metadata = {
       disable-legacy-endpoints = "true"
     }
@@ -44,11 +44,11 @@ resource "google_container_node_pool" "primary_nodes" {
 module "gke_auth" {
   source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   project_id           = var.project_id
-  cluster_name         = google_container_cluster.primary.name
-  location             = google_container_cluster.primary.location
+  cluster_name         = google_container_cluster.this.name
+  location             = google_container_cluster.this.location
   use_private_endpoint = false
 
-  depends_on = [google_container_cluster.primary]
+  depends_on = [google_container_cluster.this]
 }
 
 provider "kubernetes" {
@@ -80,7 +80,7 @@ data "terraform_remote_state" "this" {
   workspace = var.stage
 
   config = {
-    bucket =  var.backend_bucket
-    prefix = "gke/${google_container_cluster.primary.name}"
+    bucket = var.backend_bucket
+    prefix = "gke/${google_container_cluster.this.name}"
   }
 }
