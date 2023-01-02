@@ -68,17 +68,21 @@ jobs:
           #### Terraform Validation \`${{ steps.validate.outcome }}\`
 
           <details><summary>Validation Output</summary>
+
           \`\`\`\n
           ${{ steps.validate.outputs.stdout }}
           \`\`\`
+
           </details>
 
           #### Terraform Plan \`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
+
           \`\`\`\n
           ${{ steps.plan.outputs.stdout }}
           \`\`\`
+          
           </details>`;
 
           github.rest.issues.createComment({
