@@ -42,7 +42,7 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.SA }}'
-    - name: Find and Replace
+    - name: Replace project-id
       uses: jacobtomlinson/gha-find-replace@v2
       with:
         find: "<dev-stage-project-id>"
@@ -82,7 +82,7 @@ jobs:
           \`\`\`\n
           ${{ steps.plan.outputs.stdout }}
           \`\`\`
-          
+
           </details>`;
 
           github.rest.issues.createComment({
