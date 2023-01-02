@@ -10,7 +10,7 @@ locals {
 }
 data "google_container_cluster" "this" {
   name = local.is_autopilot_cluster ? "sample-cluster-${var.stage}" : "sample-cluster-standard-${var.stage}"
-  # var.region - is_autopilot_cluster ? "us-central1" : "us-central1-a"
+  # var.region = is_autopilot_cluster ? "us-central1" : "us-central1-a"
   location = var.region
 }
 
@@ -52,6 +52,7 @@ module "bucket-api-workload-identity" {
   namespace  = "bucket-api-ns"
   project_id = var.project_id
   roles      = ["roles/iam.workloadIdentityUser", "roles/storage.objectViewer", "roles/storage.admin", "roles/container.admin"]
+  depends_on = [kubernetes_namespace.bucket-api-ns]
 }
 module "pubsub-api-workload-identity" {
   source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
@@ -59,6 +60,7 @@ module "pubsub-api-workload-identity" {
   namespace  = "pubsub-api-ns"
   project_id = var.project_id
   roles      = ["roles/iam.workloadIdentityUser", "roles/storage.objectViewer", "roles/pubsub.publisher", "roles/pubsub.subscriber", "roles/container.admin"]
+  depends_on = [kubernetes_namespace.pubsub-api-ns]
 }
 data "terraform_remote_state" "this" {
   backend   = "gcs"
