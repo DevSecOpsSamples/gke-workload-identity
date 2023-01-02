@@ -66,7 +66,7 @@ jobs:
           #### Terraform Initialization \`${{ steps.init.outcome }}\`
           
           #### Terraform Validation \`${{ steps.validate.outcome }}\`
-          
+
           <details><summary>Validation Output</summary>
           \`\`\`\n
           ${{ steps.validate.outputs.stdout }}
@@ -86,7 +86,7 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: output
-          })
+          });
 
   sonarqube:
     runs-on: ubuntu-latest
