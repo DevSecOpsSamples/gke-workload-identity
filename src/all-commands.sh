@@ -14,7 +14,7 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 
 CLUSTER_REGION="us-central1"
 gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
-gcloud container clusters get-credentials sample-cluster-auto-dev --region ${CLUSTER_ZONE} --project ${PROJECT_ID}
+gcloud container clusters get-credentials sample-cluster-dev --region ${CLUSTER_ZONE} --project ${PROJECT_ID}
 
 # Step2: Create Kubernetes namespace and service account
 

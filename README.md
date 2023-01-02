@@ -17,32 +17,37 @@ In this sample project, we will learn GKE security with the IAM service account 
 
 Learn the features below:
 
-- IAM service account and role/permission
-- Workload Identity
+- **Three steps for Workload Identity**
+    - Creating an IAM service account and Kubernetes service account
+    - IAM policy binding between IAM service account and Kubernetes service account
+    - Annotate the Kubernetes service account
 - Pod specification for GKE service account and GCP load balancer
 - Create resources with Terraform
 
 ## Table of Contents
 
-- Step1: Create a GKE cluster
-- Step2: Create Kubernetes namespace and service account
-- Step3: IAM service account for bucket-api
-    - 3.1. Creating an IAM Service Account
+- [Prerequisites](#prerequisites)
+- [Step1: Create a GKE cluster](#step1-create-a-gke-cluster)
+- [Step2: Create Kubernetes namespaces and service accounts](#step2-create-kubernetes-namespaces-and-service-accounts)
+- [Step3: IAM service account for bucket-api](#step3-iam-service-account-for-bucket-api)
+    - 3.1. Creating an IAM service account
     - 3.2. IAM policy binding between IAM service account and Kubernetes service account
     - 3.3. Annotate the Kubernetes service account
-- Step4: GCS bucket creation and grant a permission
-- Step5: Deploy bucket-api
-- Step6: IAM service account for pubsub-api
-    - 6.1. Creating an IAM Service Account
-    - 6.2. IAM policy binding between IAM service account and Kubernetes service account
-    - 6.3. Annotate the Kubernetes service account
-- Step7: Create a Topic/Subscription and grant a permission
-    - 7.1. Create a Topic and Subscription.
-    - 7.2. Grant permission to IAM service account to publish to Topic
-    - 7.3. Grant permission to IAM service account for subscription
-- Step8: Deploy pubsub-api
-
-If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [terraform/README.md](terraform/README.md) page.
+- [Step4: Deploy bucket-api](#step4-deploy-bucket-api)
+- [Step5: IAM service account for pubsub-api](#step5-iam-service-account-for-pubsub-api)
+    - 5.1. Creating an IAM service account
+    - 5.2. IAM policy binding between IAM service account and Kubernetes service account
+    - 5.3. Annotate the Kubernetes service account
+- [Step6: Create a Topic/Subscription and grant a permission](#step6-create-a-topicsubscription-and-grant-a-permission)
+    - 6.1. Create a Topic and Subscription
+    - 6.2. Grant permission to IAM service account to publish to Topic
+    - 6.3. Grant permission to IAM service account for subscription
+- [Step7: Deploy pubsub-api](#step7-deploy-pubsub-api)
+- [Unittest](#unittest)
+- [Structure](#structure)
+- [Terraform](#terraform)
+- [Troubleshooting](#troubleshooting)
+- [Cleanup](#cleanup)
 
 ---
 
@@ -88,7 +93,8 @@ Create an Autopilot GKE cluster. Autopilot clusters must be regional clusters an
 
 ```bash
 CLUSTER_REGION="us-central1" 
-gcloud container clusters create-auto sample-cluster-dev --region=${CLUSTER_REGION} --project ${PROJECT_ID}
+gcloud container clusters create-auto sample-cluster-dev \
+       --region=${CLUSTER_REGION} --project ${PROJECT_ID}
 ```
 
 ```bash
@@ -97,12 +103,13 @@ sample-cluster-dev  us-central1  1.24.5-gke.600  xxx.xxx.xxx.xxx  e2-medium     
 ```
 
 ```bash
-gcloud container clusters get-credentials sample-cluster-dev --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
+gcloud container clusters get-credentials sample-cluster-dev \
+       --region=${COMPUTE_ZONE} --project ${PROJECT_ID}
 ```
 
 If you want to use a Standard mode cluster instead of Autopilot GKE cluster. Refer to the [README-standard-cluster.md](README-standard-cluster.md).
 
-## Step2: Create Kubernetes namespace and service account
+## Step2: Create Kubernetes namespaces and service accounts
 
 | API        | Object            | Name            | Description                 |
 |------------|-------------------|-----------------|-----------------------------|
@@ -121,7 +128,7 @@ kubectl create serviceaccount --namespace pubsub-api-ns pubsub-api-ksa
 
 ## Step3: IAM service account for bucket-api
 
-3.1. Creating an IAM Service Account.
+3.1. Creating an IAM service account.
 
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, SERVICE_ACCOUNT: ${SERVICE_ACCOUNT}"
@@ -248,7 +255,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 ## Step5: IAM service account for pubsub-api
 
-5.1. Creating an IAM Service Account.
+5.1. Creating an IAM service account.
 
 ```bash
 echo "PROJECT_ID: ${PROJECT_ID}, PUBSUB_SERVICE_ACCOUNT: ${PUBSUB_SERVICE_ACCOUNT}"
@@ -406,12 +413,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 ## Unittest
 
-[src/README.md](src/README.md):
-
-```bash
-PROJECT_ID="<your-project-id>"
-pytest
-```
+[src/README.md](src/README.md)
 
 ## Structure
 
@@ -442,6 +444,18 @@ pytest
 - [bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml)
 - [pubsub-api-template.yaml](src/pubsub-api/pubsub-api-template.yaml)
 
+## Terraform
+
+If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [src/terraform/README.md](src/terraform/README.md) page.
+
+## Troubleshooting
+
+- GCS bucket permission error
+
+    Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
+
+    If working fine with the credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
+
 ## Cleanup
 
 ```bash
@@ -464,14 +478,6 @@ gcloud iam service-accounts delete "${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.
 
 docker system prune -a
 ```
-
-## Troubleshooting
-
-- GCS bucket permission error
-
-    Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
-
-    If working fine with credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
 
 ## References
 
