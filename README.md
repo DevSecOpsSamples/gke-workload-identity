@@ -17,7 +17,7 @@ In this sample project, we will learn GKE security with the IAM service account 
 
 Learn the features below:
 
-- Three steps for Workload Identity
+- **Three steps for Workload Identity**
     - Creating an IAM Service Account
     - IAM policy binding between IAM service account and Kubernetes service account
     - Annotate the Kubernetes service account
@@ -26,6 +26,7 @@ Learn the features below:
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Step1: Create a GKE cluster](#step1-create-a-gke-cluster)
 - [Step2: Create Kubernetes namespace and service account](#step2-create-kubernetes-namespace-and-service-account)
 - [Step3: IAM service account for bucket-api](#step3-iam-service-account-for-bucket-api)
@@ -44,9 +45,8 @@ Learn the features below:
 - [Step7: Deploy pubsub-api](#step7-deploy-pubsub-api)
 - [Unittest](#unittest)
 - [Structure](#structure)
+- [Terraform](#terraform)
 - [Cleanup](#cleanup)
-
-If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [terraform/README.md](terraform/README.md) page.
 
 ---
 
@@ -410,12 +410,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 ## Unittest
 
-[src/README.md](src/README.md):
-
-```bash
-PROJECT_ID="<your-project-id>"
-pytest
-```
+[src/README.md](src/README.md)
 
 ## Structure
 
@@ -445,6 +440,10 @@ pytest
   
 - [bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml)
 - [pubsub-api-template.yaml](src/pubsub-api/pubsub-api-template.yaml)
+
+## Terraform
+
+If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [src/terraform/README.md](src/terraform/README.md) page.
 
 ## Cleanup
 

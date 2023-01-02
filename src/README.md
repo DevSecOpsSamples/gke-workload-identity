@@ -30,21 +30,24 @@
 ```bash
 PROJECT_ID="<your-project-id>"
 pytest
-# or gradle test
+# or ./gradlew test
 
 gladle clean
 ```
 
-[src/pytest.ini](../pytest.ini)
-
-`GOOGLE_APPLICATION_CREDENTIALS`, `GCS_BUCKET_NAME`, and `GOOGLE_CLOUD_PROJECT` environment variables are used with default('D:') option in pytest.
+`GOOGLE_APPLICATION_CREDENTIALS`, `GCS_BUCKET_NAME`, and `GOOGLE_CLOUD_PROJECT` environment variables are used with default('D:') option in [setup.cfg](../setup.cfg).
 So if you want to test in src/bucket-api or src/pubsub-api path, `.sa` file should be created in each foler.
 
 ```ini
-[pytest]
+[flake8]
+max-line-length = 200
+ignore = F123, E456
+exclude = .terraform
+
+[tool:pytest]
 log_cli=True
 log_cli_level=DEBUG
-; --html=report.html options is 'pip install pytest-html'
+; --html=report.html = pip install pytest-html
 addopts=--failed-first --cov=src/bucket-api --cov=src/pubsub-api --junit-xml=build/test-result.xml --html=build/test-report.html --cov-report=xml:build/test-coverage.xml 
 junit_family=legacy
 ; --cov-branch 
