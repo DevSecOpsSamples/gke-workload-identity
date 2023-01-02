@@ -28,7 +28,7 @@ Learn the features below:
 
 - [Prerequisites](#prerequisites)
 - [Step1: Create a GKE cluster](#step1-create-a-gke-cluster)
-- [Step2: Create Kubernetes namespace and service account](#step2-create-kubernetes-namespace-and-service-account)
+- [Step2: Create Kubernetes namespaces and service accounts](#step2-create-kubernetes-namespaces-and-service-accounts)
 - [Step3: IAM service account for bucket-api](#step3-iam-service-account-for-bucket-api)
     - 3.1. Creating an IAM Service Account
     - 3.2. IAM policy binding between IAM service account and Kubernetes service account
@@ -109,7 +109,7 @@ gcloud container clusters get-credentials sample-cluster-dev \
 
 If you want to use a Standard mode cluster instead of Autopilot GKE cluster. Refer to the [README-standard-cluster.md](README-standard-cluster.md).
 
-## Step2: Create Kubernetes namespace and service account
+## Step2: Create Kubernetes namespaces and service accounts
 
 | API        | Object            | Name            | Description                 |
 |------------|-------------------|-----------------|-----------------------------|
