@@ -46,6 +46,7 @@ Learn the features below:
 - [Unittest](#unittest)
 - [Structure](#structure)
 - [Terraform](#terraform)
+- [Troubleshooting](#troubleshooting)
 - [Cleanup](#cleanup)
 
 ---
@@ -445,6 +446,14 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [src/terraform/README.md](src/terraform/README.md) page.
 
+## Troubleshooting
+
+- GCS bucket permission error
+
+    Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
+
+    If working fine with credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
+
 ## Cleanup
 
 ```bash
@@ -467,14 +476,6 @@ gcloud iam service-accounts delete "${PUBSUB_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.
 
 docker system prune -a
 ```
-
-## Troubleshooting
-
-- GCS bucket permission error
-
-    Create a key using `gcloud iam service-accounts keys create` command and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable on you deksop. For details refer to the [README-test.md](README-test.md).
-
-    If working fine with credential file, check node option with [README-standard-cluster.md](README-standard-cluster.md) file.
 
 ## References
 
