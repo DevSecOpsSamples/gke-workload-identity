@@ -24,7 +24,7 @@ Learn the features below:
 
 ## Table of Contents
 
-- Step1: [Create a GKE cluster](##step1:-create-a-gke-cluster)
+- Step1: [Create a GKE cluster](##step1-create-a-gke-cluster)
 - Step2: Create Kubernetes namespace and service account
 - Step3: IAM service account for bucket-api
     - 3.1. Creating an IAM Service Account
@@ -82,7 +82,7 @@ gcloud config set compute/zone ${COMPUTE_ZONE}
 
 ---
 
-## Step1: Create a GKE cluster
+## Step1 Create a GKE cluster
 
 Create an Autopilot GKE cluster. Autopilot clusters must be regional clusters and it may take around 9 minutes.
 
