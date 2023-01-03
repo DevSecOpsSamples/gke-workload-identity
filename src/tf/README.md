@@ -13,7 +13,7 @@
 
 ### Update Terraform variables
 
-[terraform/cluster/terraform.tfvars](terraform.tfvars)
+[src/tf/autopilot-cluster/vars/dev.tfvars](autopilot-cluster/vars/dev.tfvars)
 
 ```bash
 project_id = "<project-id>"
@@ -36,7 +36,7 @@ backend_bucket = "terraform-state"
 - Create Terraform workspaces
 
 ```bash
-cd terraform/cluster/
+cd src/tf/autopilot-cluster/
 
 terraform workspace new dev
 terraform workspace new stg
@@ -50,7 +50,6 @@ terraform workspace list
 terraform init
 
 terraform plan -var-file=vars/dev.tfvars
-#terraform plan
 
 terraform apply
 ```
@@ -60,7 +59,7 @@ terraform apply
 - Create Terraform workspaces
 
 ```bash
-cd ../../terraform/workload-identity/
+cd ../../src/tf/workload-identity/
 
 terraform workspace new dev
 terraform workspace new stg
@@ -73,7 +72,7 @@ terraform workspace list
 ```bash
 terraform init
 
-terraform plan
+terraform plan -var-file=vars/dev.tfvars
 
 terraform apply
 ```
@@ -122,12 +121,6 @@ kubectl get all -n bucket-api-ns
 kubectl get all -n pubsub-api-ns
 ```
 
-### Enable Workload Identy
-
-```bash
-TBD
-```
-
 ### Manifest Deployment
 
 **important**: Both the IAM service account and Kubernetes service account have the SAME name when you create it by using `terraform-google-modules/kubernetes-engine/google//modules/workload-identity` module. Thus we will replace Kubernetes service account from bucket-api-`ksa` to bucket-api-`sa`.
@@ -171,10 +164,10 @@ kubectl describe service -n pubsub-api-ns
 ### Cleanup
 
 ```bash
-cd terraform/workload-identity 
+cd src/tf/workload-identity 
 terraform destroy
 
-cd ../cluster
+cd ../autopilot-cluster
 terraform destroy
 ```
 
