@@ -2,18 +2,9 @@ provider "google" {
   project = var.project_id
   region  = var.region
 }
-provider "google-beta" {
-  project = var.project_id
-  region  = var.region
-}
-
-# locals {
-#   identity_namespace = ["bucket-api-ns", "pubsub-api-ns"]
-# }
 
 # https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/guides/version_4_upgrade
 resource "google_container_cluster" "this" {
-  # provider                 = google-beta
   name                     = format("sample-cluster-standard-%s", var.stage)
   location                 = var.region
   remove_default_node_pool = true

@@ -3,13 +3,15 @@ provider "google" {
   region  = var.region
 }
 
-data "google_client_config" "provider" {}
-
 locals {
   is_autopilot_cluster = true
+  namespaces           = ["bucket-api-ns", "pubsub-api-ns"]
 }
+
+# data "google_client_config" "provider" {}
+
 data "google_container_cluster" "this" {
-  name = local.is_autopilot_cluster ? "sample-cluster-${var.stage}" : "sample-cluster-standard-${var.stage}"
+  name = local.is_autopilot_cluster ? format("sample-cluster-%s", var.stage) : format("sample-cluster-standard-%s", var.stage)
   # var.region = is_autopilot_cluster ? "us-central1" : "us-central1-a"
   location = var.region
 }
@@ -36,7 +38,6 @@ resource "kubernetes_namespace" "bucket-api-ns" {
     delete = "30m"
   }
 }
-
 resource "kubernetes_namespace" "pubsub-api-ns" {
   metadata {
     name = "pubsub-api-ns"
@@ -65,7 +66,6 @@ module "pubsub-api-workload-identity" {
 data "terraform_remote_state" "this" {
   backend   = "gcs"
   workspace = var.stage
-
   config = {
     bucket = var.backend_bucket
     prefix = "gke/${data.google_container_cluster.this.name}-workload-identity"
