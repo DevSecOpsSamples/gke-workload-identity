@@ -123,7 +123,7 @@ kubectl get all -n pubsub-api-ns
 
 ### Manifest Deployment
 
-**important**: Both the IAM service account and Kubernetes service account have the SAME name when you create it by using `terraform-google-modules/kubernetes-engine/google//modules/workload-identity` module. Thus we will replace Kubernetes service account from bucket-api-`ksa` to bucket-api-`sa`.
+**IMPORTANT**: Both the IAM service account and Kubernetes service account have the SAME name when you create it by using `terraform-google-modules/kubernetes-engine/google//modules/workload-identity` module. Thus we will replace Kubernetes service account from bucket-api-`ksa` to bucket-api-`sa`.
 
 ```bash
 cd bucket-api
