@@ -23,7 +23,7 @@ jobs:
   terraform:
     strategy:
       matrix:
-        path: [src/terraform/cluster, src/terraform/workload-identity]
+        path: [src/tf/autopilot-cluster, src/tf/standard-cluster, src/tf/workload-identity]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -47,11 +47,11 @@ jobs:
       with:
         find: "<dev-stage-project-id>"
         replace: ${{ secrets.PROJECT_ID }}
-        include: "src/terraform/**"
+        include: "src/tf/**"
         regex: false
     - name: Terraform Plan
       id: plan
-      if: matrix.path == 'src/terraform/cluster'
+      if: matrix.path != 'src/tf/workload-identity'
       run: terraform plan -var-file=vars/dev.tfvars -no-color
       working-directory: ${{ matrix.path }}
     - uses: actions/github-script@v6
