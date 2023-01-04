@@ -3,8 +3,8 @@
 ## Overview
 
 - Create a GKE cluster and node group
-- Create a Kubernetes service account & role binding
-- Workload Identity
+- Create an IAM service account, Kubernetes service account, and role binding between service accounts
+- Workload Identity per Kubernetes namespace
 
 ### Installation
 
@@ -159,7 +159,7 @@ kubectl describe service -n pubsub-api-ns
 │   11: data "google_container_cluster" "this" {
 ```
 
-> Check your region variable
+> Check your region variable in [workload-identity/vars/dev.tfvars](workload-identity/vars/dev.tfvars)
 
 ### Cleanup
 
