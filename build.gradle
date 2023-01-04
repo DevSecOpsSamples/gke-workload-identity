@@ -3,7 +3,7 @@ plugins {
   	id "org.sonarqube" version "3.4.0.2513"
 }
 
-task build(overwrite: true, dependsOn:['test'])
+task build(overwrite: true, dependsOn:['test', 'tfFmt', 'tfValidate'])
 
 task test(type:Exec) {
     commandLine 'pytest'
@@ -29,11 +29,52 @@ sonarqube {
     }
 }
 
-clean.doFirst {
+clean.doLast {
     delete "${rootDir}/src/bucket-api/bucket-api.yaml"
     delete "${rootDir}/src/pubsub-api/pubsub-api.yaml"
     delete "${rootDir}/.pytest_cache"
     delete fileTree(dir: './' , include: '**/.coverage')
-    delete fileTree(dir: 'src' , include: '**/*.pyc')    
-    delete fileTree(dir: 'src' , include: '**/__pycache__')
+    delete fileTree(dir: 'src' , include: '**/*.pyc')
+    // delete fileTree(dir: 'src' , include: '**/__pycache__/**')
+}
+
+task tfFmt {
+    doLast {
+        exec {
+            println "terraform format: src/tf/*"
+            executable "sh"
+            args "-c", "terraform fmt -recursive src/tf"
+        }
+    }
+}
+
+task tfValidate {
+    doLast {
+        def dirs = ["autopilot-cluster", "standard-cluster", "workload-identity"]
+        for (dir in dirs ) {
+            def workDir = "src/tf/${dir}"
+            exec {
+                println "terraform init: ${workDir}"
+                executable "sh"
+                args "-c", "terraform -chdir='${workDir}' init"
+            }
+            exec {
+                println "terraform validate: ${workDir}"
+                executable "sh"
+                args "-c", "terraform -chdir='${workDir}' validate"
+            }
+        }
+    }
+}
+
+task tfClean {
+    doLast {
+        def dirs = ["autopilot-cluster", "standard-cluster", "workload-identity"]
+        for (dir in dirs ) {
+            def workDir = "src/tf/${dir}"
+            println "clean terraform: ${workDir}/.terraform"
+            delete "${workDir}/.terraform"
+            // fileTree(dir: workDir , include: '.terraform')
+        }
+    }
 }

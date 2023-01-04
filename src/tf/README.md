@@ -3,8 +3,8 @@
 ## Overview
 
 - Create a GKE cluster and node group
-- Create a Kubernetes service account & role binding
-- Workload Identity
+- Create an IAM service account, Kubernetes service account, and role binding between service accounts
+- Workload Identity per Kubernetes namespace
 
 ### Installation
 
@@ -13,7 +13,7 @@
 
 ### Update Terraform variables
 
-[terraform/cluster/terraform.tfvars](terraform.tfvars)
+[src/tf/autopilot-cluster/vars/dev.tfvars](autopilot-cluster/vars/dev.tfvars)
 
 ```bash
 project_id = "<project-id>"
@@ -36,7 +36,7 @@ backend_bucket = "terraform-state"
 - Create Terraform workspaces
 
 ```bash
-cd terraform/cluster/
+cd src/tf/autopilot-cluster/
 
 terraform workspace new dev
 terraform workspace new stg
@@ -50,7 +50,6 @@ terraform workspace list
 terraform init
 
 terraform plan -var-file=vars/dev.tfvars
-#terraform plan
 
 terraform apply
 ```
@@ -60,7 +59,7 @@ terraform apply
 - Create Terraform workspaces
 
 ```bash
-cd ../../terraform/workload-identity/
+cd ../../src/tf/workload-identity/
 
 terraform workspace new dev
 terraform workspace new stg
@@ -73,7 +72,7 @@ terraform workspace list
 ```bash
 terraform init
 
-terraform plan
+terraform plan -var-file=vars/dev.tfvars
 
 terraform apply
 ```
@@ -122,15 +121,9 @@ kubectl get all -n bucket-api-ns
 kubectl get all -n pubsub-api-ns
 ```
 
-### Enable Workload Identy
-
-```bash
-TBD
-```
-
 ### Manifest Deployment
 
-**important**: Both the IAM service account and Kubernetes service account have the SAME name when you create it by using `terraform-google-modules/kubernetes-engine/google//modules/workload-identity` module. Thus we will replace Kubernetes service account from bucket-api-`ksa` to bucket-api-`sa`.
+**IMPORTANT**: Both the IAM service account and Kubernetes service account have the SAME name when you create it by using `terraform-google-modules/kubernetes-engine/google//modules/workload-identity` module. Thus we will replace Kubernetes service account from bucket-api-`ksa` to bucket-api-`sa`.
 
 ```bash
 cd bucket-api
@@ -156,19 +149,32 @@ kubectl describe service -n bucket-api-ns
 kubectl describe service -n pubsub-api-ns
 ```
 
+## Troubleshooting
+
+```bash
+│ Error: projects/<your-project-id>/locations/us-central1-a/clusters/sample-cluster-dev not found
+│ 
+│   with data.google_container_cluster.this,
+│   on main.tf line 11, in data "google_container_cluster" "this":
+│   11: data "google_container_cluster" "this" {
+```
+
+> Check your region variable in [workload-identity/vars/dev.tfvars](workload-identity/vars/dev.tfvars)
+
 ### Cleanup
 
 ```bash
-cd terraform/workload-identity 
+cd src/tf/workload-identity 
 terraform destroy
 
-cd ../cluster
+cd ../autopilot-cluster
 terraform destroy
 ```
 
 ### References
 
 - [container_cluster](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster)
+- [Terraform Google Provider 4.0.0 Upgrade Guide](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/guides/version_4_upgrade)
 - [Kubernetes Provider](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)
 - [kubernetes_namespace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace)
 - [workload-identity](https://registry.terraform.io/modules/terraform-google-modules/kubernetes-engine/google/latest/submodules/workload-identity)

@@ -438,7 +438,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 │   │   ├── pubsub_api_main.py
 │   │   ├── requirements.txt
 │   │   └── test_pubsub_api.py
-│   └── terraform
+│   └── tf
 ```
   
 - [bucket-api-template.yaml](src/bucket-api/bucket-api-template.yaml)
@@ -446,7 +446,7 @@ curl http://${LB_IP_ADDRESS}/bucket
 
 ## Terraform
 
-If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [src/terraform/README.md](src/terraform/README.md) page.
+If you use the Terraform, you can create all resources Terraform at a time. Please refer to the [src/tf/README.md](src/tf/README.md) page.
 
 ## Troubleshooting
 
